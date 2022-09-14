@@ -9,8 +9,8 @@ export const user = async (request, response) => {
   user.email = email;
   user.dob = dob;
 
-  const userAddRepo = AppDataSource.getRepository(User);
-  await userAddRepo.save(user);
+  const usersRepo = AppDataSource.getRepository(User);
+  await usersRepo.save(user);
 
   response.status(201).json({
     user: {
