@@ -1,6 +1,6 @@
 require('express-async-errors');
-import User from '../src/entity/User'
-import { AppDataSource } from '../src/data-source';
+import User from '../../db/entity/User'
+import { AppDataSource } from '../../db/data-source';
 
 export const user = async (request, response) => {
   const email = request.body.email

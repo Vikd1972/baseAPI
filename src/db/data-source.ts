@@ -2,14 +2,16 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
 
+const config = require('../config')
+
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres_user",
-    password: "qaz789",
-    database: "user_db",
-    synchronize: true,
+    host: config.default.host,
+    port: config.default.port,
+    username: config.default.user,
+    password: config.default.pass,
+    database: config.default.base,
+    synchronize: false,
     logging: false,
     entities: [User],
     migrations: [],

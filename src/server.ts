@@ -1,10 +1,11 @@
 import "reflect-metadata"
+
 const express = require("express");
 const app = express(); 
 
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from "../src/db/data-source"
 
-const userRouter = require("../routes/userRoutes");
+const userRouter = require("./routes/userRoutes");
 
 app.use(express.json())
 

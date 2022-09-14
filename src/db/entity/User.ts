@@ -12,8 +12,14 @@ export class User {
     @Column({ nullable: true })
     email: string
 
-    @Column({ type: 'date', nullable: true })
-    dob: string;
+    @Column({ type: 'date' })
+    dob: string
+
+    @Column({ nullable: true })
+    isAdmin: boolean
+
+    @Column({ nullable: true })
+    hash: string
 }
 
 export default User

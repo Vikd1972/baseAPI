@@ -1,5 +1,5 @@
-import User from '../src/entity/User'
-import { AppDataSource } from '../src/data-source';
+import User from '../../db/entity/User'
+import { AppDataSource } from '../../db/data-source';
 
 export const user = async (req, res) => {
     const usersRepo = AppDataSource.getRepository(User);
@@ -10,6 +10,7 @@ export const user = async (req, res) => {
             name: user.fullname,
             email: user.email,
             dob: user.dob,
+            isAdmin: user.isAdmin,
         })),
     });
 
