@@ -6,12 +6,14 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ nullable: true })
     fullname: string
 
-    @Column()
+    @Column({ nullable: true })
     email: string
 
-   @Column({ type: 'date' })
-   dob: string;
+    @Column({ type: 'date', nullable: true })
+    dob: string;
 }
+
+export default User
