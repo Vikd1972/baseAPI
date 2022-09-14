@@ -3,7 +3,6 @@ import User from '../src/entity/User'
 import { AppDataSource } from '../src/data-source';
 
 export const user = async (request, response) => {
-  console.log(request.body)
   const { fullname, email, dob } = request.body
   const user = new User();
   user.fullname = fullname;
