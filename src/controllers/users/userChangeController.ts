@@ -1,4 +1,5 @@
 require('express-async-errors');
+
 import User from '../../db/entity/User'
 import { AppDataSource } from '../../db/data-source';
 

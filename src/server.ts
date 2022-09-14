@@ -1,16 +1,14 @@
 import "reflect-metadata"
-
 const express = require("express");
-const app = express(); 
+const app = express();
 
 import { AppDataSource } from "../src/db/data-source"
 
-const userRouter = require("./routes/userRoutes");
-
 app.use(express.json())
 
-app.use("/api/users", userRouter);
+const userRouter = require("./routes/userRoute");
 
+app.use("/api/users", userRouter);
 app.use(function (req, res, next) {
     res.status(404).send("Not Found")
 });

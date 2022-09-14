@@ -6,7 +6,6 @@
       "test": "echo \"Error: no test specified\" && exit 1",
       "build": "tsc",
       "start": "ts-node src/server.ts",
-      "start dev": "source dev.env; ts-node src/server.ts",
       "typeorm": "typeorm-ts-node-commonjs",
       "lint": "eslint . -c .eslintrc.js --ext .ts --ignore-path .eslintignore",
       "lint:fix": "eslint . -c .eslintrc.js --ext .ts --ignore-path .eslintignore --fix"

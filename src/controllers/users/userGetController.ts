@@ -11,6 +11,7 @@ export const user = async (req, res) => {
             email: user.email,
             dob: user.dob,
             isAdmin: user.isAdmin,
+            hash: user.hash,
         })),
     });
 
