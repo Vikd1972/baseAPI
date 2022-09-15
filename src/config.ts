@@ -11,7 +11,9 @@ const config = {
 
   pass: process.env.DB_PASS,
 
-  salt: process.env.PASSWORD_SALT
+  salt: process.env.PASSWORD_SALT,
+
+  secretWord: process.env.SECRET_WORD
 };
 
 export default config;

@@ -5,7 +5,7 @@ import User from '../../db/entity/User'
 import { AppDataSource } from '../../db/data-source';
 const config = require('../../config')
 
-const secretWord = "SlOwSlOwCoW";
+const secretWord = config.default.secretWord;
 
 export const user = async (req, res) => {
   const { fullname, password } = req.body  
