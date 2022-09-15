@@ -6,10 +6,10 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: true })
+    @Column()
     fullname: string
 
-    @Column({ nullable: true })
+    @Column()
     email: string
 
     @Column({ type: 'date' })
@@ -18,7 +18,7 @@ export class User {
     @Column({ nullable: true })
     isAdmin: boolean
 
-    @Column({ nullable: true })
+    @Column()
     hash: string
 }
 

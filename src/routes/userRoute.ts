@@ -3,15 +3,16 @@ const userRoute = express.Router();
 
 import { checkToken } from "../middleware/checkToken";
 
-const userAddController = require("../controllers/users/userAddController");
-userRoute.use("/add", userAddController.user);
-const userChangeController = require("../controllers/users/userChangeController");
-userRoute.use("/change", checkToken, userChangeController.user);
-const userDeleteController = require("../controllers/users/userDeleteController");
-userRoute.use("/delete", checkToken, userDeleteController.user);
-const userLoginController = require("../controllers/users/userLoginController");
-userRoute.use("/login", userLoginController.user);
-const userGetController = require("../controllers/users/userGetController");
-userRoute.use("/", checkToken, userGetController.user);
+import addUser from '../controllers/users/userAddController'
+userRoute.post("/", addUser);
+
+import changeUser from '../controllers/users/userChangeController'
+userRoute.put("/", checkToken, changeUser);
+
+import deleteUser from '../controllers/users/userDeleteController'
+userRoute.delete("/", checkToken, deleteUser);
+
+import getUser from '../controllers/users/userGetController'
+userRoute.get("/", checkToken, getUser);
  
-module.exports = userRoute;
+export default userRoute;

@@ -1,22 +1,27 @@
 require('express-async-errors');
+import { Handler } from 'express';
 
-import User from '../../db/entity/User'
-import { AppDataSource } from '../../db/data-source';
+import { usersRepo } from "../../db";
 
-export const user = async (request, response) => {
-  const oldemail = request.body.oldemail;
-  const { fullname, email, dob, isAdmin} = request.body 
+const changeUser: Handler = async (request, response) => {
+  try {
+    const oldemail = request.body.oldemail;
+    const { fullname, email, dob, isAdmin } = request.body
 
-  const usersRepo = AppDataSource.getRepository(User);
-  const userToChange = await usersRepo.findOneBy({
-    email: oldemail,
-  });
-  userToChange.fullname = fullname;
-  userToChange.email = email;
-  userToChange.dob = dob;
-  userToChange.isAdmin = isAdmin;
+    const userToChange = await usersRepo.findOneBy({
+      email: oldemail,
+    });
+    userToChange.fullname = fullname;
+    userToChange.email = email;
+    userToChange.dob = dob;
+    userToChange.isAdmin = isAdmin;
 
-  await usersRepo.save(userToChange);
+    await usersRepo.save(userToChange);
 
-  response.send('change user')
+    response.send('change user')
+  } catch (err) {
+    console.log(err)
+  };
 };
+
+export default changeUser;

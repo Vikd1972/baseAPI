@@ -1,16 +1,21 @@
 require('express-async-errors');
+import { Handler } from 'express';
 
-import User from '../../db/entity/User'
-import { AppDataSource } from '../../db/data-source';
+import { usersRepo } from "../../db";
 
-export const user = async (request, response) => {
-  const email = request.body.email
+const deleteUser: Handler = async (request, response) => {
+  try {
+    const email = request.body.email
 
-  const usersRepo = AppDataSource.getRepository(User);
-  const userToDelete = await usersRepo.findOneBy({
-    email: email,
-  });
-  await usersRepo.remove(userToDelete);
+    const userToDelete = await usersRepo.findOneBy({
+      email: email,
+    });
+    await usersRepo.remove(userToDelete);
 
-  response.send('delete user')
+    response.send('delete user')
+  } catch (err) {
+    console.log(err)
+  };
 };
+
+export default deleteUser;

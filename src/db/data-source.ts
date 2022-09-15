@@ -2,19 +2,19 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
 
-const config = require('../config')
+import config from "../config"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: config.default.host,
-    port: config.default.port,
-    username: config.default.user,
-    password: config.default.pass,
-    database: config.default.base,
+    host: config.host,
+    port: config.port,
+    username: config.user,
+    password: config.pass,
+    database: config.base,
     synchronize: false,
     logging: false,
-    entities: [User],
-    migrations: [],
+    entities: [User], //`${__dirname}/entity/User`
+    migrations: ['src/bd/migration/*{.ts,.js}'],
     subscribers: [],
 })
 

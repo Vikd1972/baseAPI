@@ -3,25 +3,32 @@ const crypto = require("crypto");
 
 import User from '../db/entity/User'
 import { AppDataSource } from '../db/data-source';
-const config = require('../config')
+import { Handler } from 'express';
 
-const secretWord = config.default.secretWord;
+import config from "../config"
 
-export const checkToken = async (req, res, next) => {
+const secretWord = config.secretWord;
 
-  const usersRepo = AppDataSource.getRepository(User);
-  const userAdmin = await usersRepo.findOneBy({
-    fullname: 'Admin',
-  });
+export const checkToken: Handler = async (req, res, next) => {
+  try {
+    const usersRepo = AppDataSource.getRepository(User);
+    const userAdmin = await usersRepo.findOneBy({
+      fullname: 'Admin',
+    });
 
-  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "jwt" })).toString("base64");
-  const payload = Buffer.from(JSON.stringify(userAdmin.email)).toString("base64");
-  const signature = crypto.createHmac("SHA256", secretWord).update(`${header}.${payload}`).digest("base64");
-  const token = `${header}.${payload}.${signature}`;
-
-  if ((req.headers.authorization !== undefined) && (token === req.headers.authorization.split(" ")[1])) {
-    return next();
-  } else {
-    res.send("authentication error");
+    const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "jwt" })).toString("base64");
+    const payload = Buffer.from(JSON.stringify(userAdmin.email)).toString("base64");
+    const signature = crypto.createHmac("SHA256", secretWord).update(`${header}.${payload}`).digest("base64");
+    const token = `${header}.${payload}.${signature}`;
+  
+    if ((req.headers.authorization !== undefined) && (token === req.headers.authorization.split(" ")[1])) {
+      return next();
+    } else {
+      //next()
+      res.send("authentication error");
+    };
+  } catch (err) {
+    console.log(err)
   };
 };
+
