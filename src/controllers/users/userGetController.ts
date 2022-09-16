@@ -1,12 +1,15 @@
 import { Handler } from 'express';
 
 import { usersRepo } from "../../db";
-import CustomError from '../../errorHandler/customError';
+import customError from '../../custmError/customError';
 
- const getUser: Handler = async (req, res) => {
+ const getUser: Handler = async (request, response, next) => {
     try {
         const users = await usersRepo.find();
-        res.json({
+        if (users.length === 0) {
+            throw customError(404, 'users not found', 'users not found');
+        }
+        response.json({
             users: users.map((user) => ({
                 id: user.id,
                 name: user.fullname,
@@ -17,14 +20,8 @@ import CustomError from '../../errorHandler/customError';
             })),
         });
     } catch (err) {
-        // if (err instanceof CustomError) {
-        //   response.status().json({message})
-        // }
-
-        console.log(err)
+      next(err)
     };
-
-  //res.send("List user");
 };
 
 export default getUser;

@@ -5,8 +5,8 @@ import { Handler } from 'express';
 import User from '../../db/entity/User'
 import { usersRepo } from "../../db";
 import config from "../../config"
-//import CustomError from '../../errorHandler/customError';
-const CustomError = require('../../errorHandler/customError')
+import customError from '../../custmError/customError';
+
 
 const createHash = (password) => {
   const hash = crypto
@@ -15,12 +15,12 @@ const createHash = (password) => {
   return hash;
 }
 
-const addUser: Handler = async (request, response) => {
+const addUser: Handler = async (request, response, next) => {
   try {
     const { fullname, email, dob, password } = request.body
 
-    if ((fullname === null) || (email === null) || (dob === null) || (password === null)) {
-      throw new CustomError 
+    if ((fullname === undefined) || (email === undefined) || (dob === undefined) || (password === undefined)) {
+      throw customError(412, 'one or more fields are empty', request.body);
     }
 
     const user = new User();
@@ -34,16 +34,7 @@ const addUser: Handler = async (request, response) => {
     response.send('user added')
 
   } catch (err) {
-    if (err instanceof CustomError) {
-      response.status(412).json('message')
-    } else {
-      return response.status(500).send({
-        error: 'GENERIC',
-        description: 'Something went wrong. Please contact support.',
-      })
-    }
-
-    console.log(err)
+    next(err); 
   };
 };
 

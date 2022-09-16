@@ -28,7 +28,7 @@ export const checkToken: Handler = async (req, res, next) => {
       res.send("authentication error");
     };
   } catch (err) {
-    console.log(err)
+    //console.log(err)
   };
 };
 
