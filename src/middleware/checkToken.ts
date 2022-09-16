@@ -1,30 +1,34 @@
 require('express-async-errors');
-const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
 
-import User from '../db/entity/User'
-import { AppDataSource } from '../db/data-source';
-import { Handler } from 'express';
+import { Response, NextFunction } from 'express';
+import { usersRepo } from "../db";
 
 import config from "../config"
-import customError from '../custmError/customError';
+import customError from '../customError/customError';
+import { AuthInfoRequest } from '../definions/request';
 
 const secretWord = config.secretWord;
 
-export const checkToken: Handler = async (request, response, next) => {
+export const checkToken = (request: AuthInfoRequest, response: Response, next: NextFunction) => {
   try {
-    const usersRepo = AppDataSource.getRepository(User);
-    const userAdmin = await usersRepo.findOneBy({
-      fullname: 'Admin',
-    });
-
-    const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "jwt" })).toString("base64");
-    const payload = Buffer.from(JSON.stringify(userAdmin.email)).toString("base64");
-    const signature = crypto.createHmac("SHA256", secretWord).update(`${header}.${payload}`).digest("base64");
-    const token = `${header}.${payload}.${signature}`;  
-    if ((request.headers.authorization !== undefined) && (token === request.headers.authorization.split(" ")[1])) {
-      return next();
+    if (request.headers.authorization) {
+      console.log('error: ' + request.headers.authorization);
+      
+      const decoded = jwt.verify(request.headers.authorization.split(' ')[1], secretWord)
+      const userToLogin = usersRepo.findOneBy({
+        id: decoded.id,
+      });
+      if (userToLogin === null) {
+        throw customError(404, 'user not found', 'user not found');
+      } else {
+        userToLogin.then(result => {    
+          if (result !== null) request.User = result;
+        })
+        next()
+      }
     } else {
-      throw customError(401, 'authentication error', userAdmin.fullname);
+      throw customError(401, 'token not found', 'token not found')
     }
   } catch (err) {
     next(err)

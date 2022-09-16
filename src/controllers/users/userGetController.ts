@@ -1,7 +1,7 @@
 import { Handler } from 'express';
 
 import { usersRepo } from "../../db";
-import customError from '../../custmError/customError';
+import customError from '../../customError/customError';
 
 const getUser: Handler = async (request, response, next) => {
     try {

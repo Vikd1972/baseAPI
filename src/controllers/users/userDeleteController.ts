@@ -2,7 +2,7 @@ require('express-async-errors');
 import { Handler } from 'express';
 
 import { usersRepo } from "../../db";
-import customError from '../../custmError/customError';
+import customError from '../../customError/customError';
 
 const deleteUser: Handler = async (request, response, next) => {
   try {

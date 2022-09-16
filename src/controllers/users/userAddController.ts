@@ -5,7 +5,7 @@ import { Handler } from 'express';
 import User from '../../db/entity/User'
 import { usersRepo } from "../../db";
 import config from "../../config"
-import customError from '../../custmError/customError';
+import customError from '../../customError/customError';
 
 const createHash = (password) => {
   const hash = crypto
