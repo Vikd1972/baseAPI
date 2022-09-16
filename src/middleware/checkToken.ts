@@ -6,10 +6,11 @@ import { AppDataSource } from '../db/data-source';
 import { Handler } from 'express';
 
 import config from "../config"
+import customError from '../custmError/customError';
 
 const secretWord = config.secretWord;
 
-export const checkToken: Handler = async (req, res, next) => {
+export const checkToken: Handler = async (request, response, next) => {
   try {
     const usersRepo = AppDataSource.getRepository(User);
     const userAdmin = await usersRepo.findOneBy({
@@ -19,16 +20,14 @@ export const checkToken: Handler = async (req, res, next) => {
     const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "jwt" })).toString("base64");
     const payload = Buffer.from(JSON.stringify(userAdmin.email)).toString("base64");
     const signature = crypto.createHmac("SHA256", secretWord).update(`${header}.${payload}`).digest("base64");
-    const token = `${header}.${payload}.${signature}`;
-  
-    if ((req.headers.authorization !== undefined) && (token === req.headers.authorization.split(" ")[1])) {
+    const token = `${header}.${payload}.${signature}`;  
+    if ((request.headers.authorization !== undefined) && (token === request.headers.authorization.split(" ")[1])) {
       return next();
     } else {
-      //next()
-      res.send("authentication error");
-    };
+      throw customError(401, 'authentication error', userAdmin.fullname);
+    }
   } catch (err) {
-    //console.log(err)
+    next(err)
   };
 };
 

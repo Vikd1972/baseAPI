@@ -3,7 +3,7 @@ import { Handler } from 'express';
 import { usersRepo } from "../../db";
 import customError from '../../custmError/customError';
 
- const getUser: Handler = async (request, response, next) => {
+const getUser: Handler = async (request, response, next) => {
     try {
         const users = await usersRepo.find();
         if (users.length === 0) {

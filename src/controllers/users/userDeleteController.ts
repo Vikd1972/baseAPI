@@ -16,7 +16,6 @@ const deleteUser: Handler = async (request, response, next) => {
     }
 
     await usersRepo.remove(userToDelete);
-
     response.send('delete user')
   } catch (err) {
     next(err)

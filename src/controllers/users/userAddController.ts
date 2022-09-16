@@ -7,7 +7,6 @@ import { usersRepo } from "../../db";
 import config from "../../config"
 import customError from '../../custmError/customError';
 
-
 const createHash = (password) => {
   const hash = crypto
     .pbkdf2Sync(password, config.salt, 1000, 64, `sha512`)
@@ -18,7 +17,6 @@ const createHash = (password) => {
 const addUser: Handler = async (request, response, next) => {
   try {
     const { fullname, email, dob, password } = request.body
-
     if ((fullname === undefined) || (email === undefined) || (dob === undefined) || (password === undefined)) {
       throw customError(412, 'one or more fields are empty', request.body);
     }
@@ -32,7 +30,6 @@ const addUser: Handler = async (request, response, next) => {
     
     await usersRepo.save(user);
     response.send('user added')
-
   } catch (err) {
     next(err); 
   };

@@ -1,7 +1,6 @@
 require('express-async-errors');
 const crypto = require("crypto");
 import { Handler } from 'express';
-import { StatusCodes } from 'http-status-codes';
 
 import { usersRepo } from "../../db";
 import config from "../../config"
@@ -15,8 +14,7 @@ const loginUser: Handler = async (request, response, next) => {
     
     const userToLogin = await usersRepo.findOneBy({
       fullname: fullname,
-    });
-    
+    });    
     if (userToLogin === null) {
       throw customError(404, 'user not found', fullname);
     }

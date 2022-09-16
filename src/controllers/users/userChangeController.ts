@@ -16,15 +16,13 @@ const changeUser: Handler = async (request, response, next) => {
       throw customError(404, 'email not found', request.body.oldemail);
     }
 
-
     userToChange.fullname = fullname;
     userToChange.email = email;
     userToChange.dob = dob;
     userToChange.isAdmin = isAdmin;
 
     await usersRepo.save(userToChange);
-
-    response.send('change user')
+    response.send('change user')    
   } catch (err) {
     next(err)
   };

@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
     database: config.base,
     synchronize: false,
     logging: false,
-    entities: [User], //`${__dirname}/entity/User`
+    entities: [User], 
     migrations: ['src/bd/migration/*{.ts,.js}'],
     subscribers: [],
 })
@@ -22,4 +22,4 @@ AppDataSource.initialize()
     .then(() => {
         // here you can start to work with your database
     })
-    .catch((error) => console.log('error'))
+    .catch((error) => console.log(error))
