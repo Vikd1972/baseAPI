@@ -18,11 +18,11 @@ export const checkToken = (request: AuthInfoRequest, response: Response, next: N
       const userToLogin = usersRepo.findOneBy({
         id: decoded.id,
       });
-      if (userToLogin === null) {
+      if (!userToLogin) {
         throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, nameError.user_nf);
       } else {
         userToLogin.then(result => {    
-          if (result !== null) request.user = result;
+          if (result) request.user = result;
         })
         next()
       }

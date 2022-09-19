@@ -12,7 +12,7 @@ const deleteUser: Handler = async (request, response, next) => {
     const userToDelete = await usersRepo.findOneBy({
       email: email,
     });
-    if (userToDelete === null) {
+    if (!userToDelete) {
       throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, request.body.email);
     }
 

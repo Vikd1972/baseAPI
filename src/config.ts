@@ -1,17 +1,17 @@
-require('dotenv').config()
+require('dotenv').config();
 interface Config {
-  port: number,
-  host: string,
-  user: string,
-  base: string,
-  pass: string,
-  salt: string,
-  secretWord: string,
+  port?: number,
+  host?: string,
+  user?: string,
+  base?: string,
+  pass?: string,
+  salt?: string,
+  secretWord?: string
 }
 
 
 const config: Config = {
-  port: +process.env.PORT,
+  port: +(process.env.PORT ?? 4000),
   host: process.env.HOST,
   user: process.env.DB_USERNAME,
   base: process.env.DB_BASENAME,

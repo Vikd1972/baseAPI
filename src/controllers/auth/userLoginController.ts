@@ -6,8 +6,8 @@ import { Handler } from 'express';
 const jwt = require('jsonwebtoken');
 import { StatusCodes } from 'http-status-codes';
 import { AppDataSource } from '../../db/data-source';
-
 import { usersRepo } from "../../db";
+
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -18,14 +18,14 @@ const secretWord = config.secretWord;
 const loginUser: Handler = async (request, response, next) => {
   try {
     const { email, pass } = request.body;   
-    const userToLogin = await AppDataSource
-      .getRepository(User)
-      .createQueryBuilder("user")
+
+    const userToLogin = await usersRepo.
+      createQueryBuilder("user")
       .where("user.email = :email", { email: email })
       .addSelect("user.password")
       .getOne()
 
-    if (userToLogin === null) {
+    if (!userToLogin) {
       throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, email);
     }
     const hash = crypto
@@ -36,8 +36,8 @@ const loginUser: Handler = async (request, response, next) => {
       return response.status(200).json({
         user: {
           userToLogin,
-          token: jwt.sign({ id: userToLogin.id }, secretWord),
         },
+        token: jwt.sign({ id: userToLogin.id }, secretWord),
       })
     } else {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.user_pw, userToLogin.fullname);
