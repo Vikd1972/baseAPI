@@ -1,22 +1,23 @@
 require('express-async-errors');
 import { Handler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { usersRepo } from "../../db";
 import customError from '../../customError/customError';
+import nameError from '../../utils/utils';
 
 const deleteUser: Handler = async (request, response, next) => {
   try {
-    const email = request.body.email
-
+    const email = request.body.email;
     const userToDelete = await usersRepo.findOneBy({
       email: email,
     });
     if (userToDelete === null) {
-      throw customError(404, 'user not found', request.body.email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, request.body.email);
     }
 
     await usersRepo.remove(userToDelete);
-    response.send('delete user')
+    return response.status(200).json('delete user');
   } catch (err) {
     next(err)
   };

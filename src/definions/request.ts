@@ -1,12 +1,6 @@
 import { Handler, Request } from "express"
+import User from "../db/entity/User"
 
   export interface AuthInfoRequest extends Request {
-    User: {
-      id: number,
-      fullname: string,
-      email: string,
-      dob: string,
-      isAdmin: boolean,
-      hash: string
-    }
+    user: User
   }

@@ -6,20 +6,20 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({nullable: true})
     fullname: string
 
-    @Column()
+    @Column({nullable: false})
     email: string
 
-    @Column({ type: 'date' })
+    @Column({type: 'date', nullable: true})
     dob: string
 
-    @Column({ nullable: true })
+    @Column({nullable: true})
     isAdmin: boolean
-
-    @Column()
-    hash: string
+    
+    @Column({ type: 'varchar', nullable: true, select: false })
+    password: string
 }
 
 export default User

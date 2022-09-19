@@ -1,28 +1,27 @@
 require('express-async-errors');
 import { Handler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { usersRepo } from "../../db";
 import customError from '../../customError/customError';
+import nameError from '../../utils/utils';
 
 const changeUser: Handler = async (request, response, next) => {
   try {
-    const oldemail = request.body.oldemail;
-    const { fullname, email, dob, isAdmin } = request.body
+    const { fullname, email, dob } = request.body;
+    console.log(fullname);
 
     const userToChange = await usersRepo.findOneBy({
-      email: oldemail,
+      email: email,
     });
-    if (userToChange === null) {
-      throw customError(404, 'email not found', request.body.oldemail);
+    if (!userToChange) {
+      throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, request.body.oldemail);
     }
-
     userToChange.fullname = fullname;
-    userToChange.email = email;
-    userToChange.dob = dob;
-    userToChange.isAdmin = isAdmin;
+    userToChange.dob = dob;    
 
     await usersRepo.save(userToChange);
-    response.send('change user')    
+    return response.status(200).json('change user');
   } catch (err) {
     next(err)
   };
