@@ -1,5 +1,3 @@
-require('express-async-errors');
-const jwt = require('jsonwebtoken');
 import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -8,6 +6,9 @@ import config from "../config"
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
 import { AuthInfoRequest } from '../definions/request';
+
+require('express-async-errors');
+const jwt = require('jsonwebtoken');
 
 const secretWord = config.secretWord;
 
@@ -34,3 +35,4 @@ export const checkToken = (request: AuthInfoRequest, response: Response, next: N
   };
 };
 
+export default checkToken;

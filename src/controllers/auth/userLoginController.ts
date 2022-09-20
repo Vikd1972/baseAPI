@@ -1,17 +1,16 @@
-require('express-async-errors');
 
-const crypto = require("crypto");
 import { Handler } from 'express';
-//import jwt from 'jsonwebtoken';
-const jwt = require('jsonwebtoken');
 import { StatusCodes } from 'http-status-codes';
-import { AppDataSource } from '../../db/data-source';
-import { usersRepo } from "../../db";
+//import jwt from 'jsonwebtoken';
 
+import { usersRepo } from "../../db";
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
-import User from '../../db/entity/User';
+
+require('express-async-errors');
+const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
 
 const secretWord = config.secretWord;
 
@@ -31,16 +30,16 @@ const loginUser: Handler = async (request, response, next) => {
     const hash = crypto
       .pbkdf2Sync(pass, config.salt, 1000, 64, `sha512`)
       .toString(`hex`);
-    if (userToLogin.password === hash) {
-      
+    if (userToLogin.password !== hash) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_pw, userToLogin.fullname);      
+    } else {
+      delete userToLogin.password
       return response.status(200).json({
         user: {
           userToLogin,
         },
         token: jwt.sign({ id: userToLogin.id }, secretWord),
       })
-    } else {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_pw, userToLogin.fullname);
     }
   } catch (err) {
     next(err);  

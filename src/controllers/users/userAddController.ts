@@ -1,7 +1,4 @@
-require('express-async-errors');
-import('node:crypto')
 
-const crypto = require("crypto");
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -10,6 +7,10 @@ import { usersRepo } from "../../db";
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
+
+require('express-async-errors');
+const crypto = require("crypto");
+import('node:crypto')
 
 const createHash = (pass: string) => {
   const hash = crypto

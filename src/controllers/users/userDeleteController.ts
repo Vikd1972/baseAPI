@@ -1,10 +1,11 @@
-require('express-async-errors');
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import { usersRepo } from "../../db";
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
+
+require('express-async-errors');
 
 const deleteUser: Handler = async (request, response, next) => {
   try {

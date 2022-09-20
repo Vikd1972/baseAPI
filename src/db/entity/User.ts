@@ -19,7 +19,7 @@ export class User {
     isAdmin: boolean
     
     @Column({ type: 'varchar', nullable: true, select: false })
-    password: string
+    password?: string
 }
 
 export default User
