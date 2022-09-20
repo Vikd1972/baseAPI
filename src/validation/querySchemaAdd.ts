@@ -1,6 +1,7 @@
-import { object, string, date, number } from 'yup';
+import { object, string, date, SchemaOf } from 'yup';
+import QuerySchemaType from './querySchemaType';
 
-const querySchemaAdd = object({  
+const querySchemaAdd: SchemaOf<QuerySchemaType> = object({  
     fullname: string().min(3, 'must be at least 3 characters long').max(70, 'must be less than or equal to 70 characters'),
     email: string().email('must be a valid email').required('Required Email'),
     dob: date().required('Required Date of birthday!'),
