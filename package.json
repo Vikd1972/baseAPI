@@ -13,6 +13,7 @@
    "author": "",
    "license": "ISC",
    "devDependencies": {
+      "@types/jsonwebtoken": "^8.5.9",
       "@types/node": "^16.11.10",
       "@typescript-eslint/eslint-plugin": "^5.37.0",
       "@typescript-eslint/parser": "^5.37.0",

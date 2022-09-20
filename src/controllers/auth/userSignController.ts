@@ -1,22 +1,15 @@
 
 import { Handler } from 'express';
-import('node:crypto');
+import * as jwt from 'jsonwebtoken'
+import { createHmac } from 'node:crypto';
 
 import User from '../../db/entity/User'
 import { usersRepo } from "../../db";
 import config from "../../config"
 
 require('express-async-errors');
-const crypto = require("crypto");
-const jwt = require('jsonwebtoken');
-const secretWord = config.secretWord;
 
-const createHash = (pass: string) => {
-  const hash = crypto
-    .pbkdf2Sync(pass, config.salt, 1000, 64, `sha512`)
-    .toString(`hex`);
-  return hash;
-}
+const secretWord = config.secretWord;
 
 const signUser: Handler = async (request, response, next) => {
   try {
@@ -25,7 +18,7 @@ const signUser: Handler = async (request, response, next) => {
     user.fullname = fullname;
     user.email = email;
     user.dob = dob;
-    user.password = createHash(pass);
+    user.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
     await usersRepo.save(user);
 
     const userToSign = await usersRepo.findOneBy({
@@ -37,7 +30,7 @@ const signUser: Handler = async (request, response, next) => {
         user: {
           userToSign,
         },
-        token: jwt.sign({ id: userToSign.id }, secretWord),
+        token: jwt.sign({ id: userToSign.id }, secretWord || ''),
       })
     };
   } catch (err) {

@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import * as jwt from 'jsonwebtoken'
 
 import { usersRepo } from "../db";
 import config from "../config"
@@ -8,14 +9,13 @@ import nameError from '../utils/utils';
 import { AuthInfoRequest } from '../definions/request';
 
 require('express-async-errors');
-const jwt = require('jsonwebtoken');
 
 const secretWord = config.secretWord;
 
 export const checkToken = (request: AuthInfoRequest, response: Response, next: NextFunction) => {
-  try {
+  try {    
     if (request.headers.authorization) {
-      const decoded = jwt.verify(request.headers.authorization.split(' ')[1], secretWord)
+      const decoded = jwt.verify(request.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload       
       const userToLogin = usersRepo.findOneBy({
         id: decoded.id,
       });
@@ -25,7 +25,7 @@ export const checkToken = (request: AuthInfoRequest, response: Response, next: N
         userToLogin.then(result => {    
           if (result) request.user = result;
         })
-        next()
+        return next()
       }
     } else {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.user_ua, nameError.user_ua)

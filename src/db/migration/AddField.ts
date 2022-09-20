@@ -1,6 +1,5 @@
 import { MigrationInterface, QueryRunner, TableColumn } from "typeorm"
 
-
 export class AddField implements MigrationInterface {    
 
     public async up(queryRunner: QueryRunner): Promise<void> {

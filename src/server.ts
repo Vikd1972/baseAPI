@@ -1,13 +1,12 @@
 import "reflect-metadata"
-//import { Express } from "express";
-const express = require("express");
-const app = express();
+import  express from "express";
 
 import userRoute from './routes/userRoute'
 import authRoute from "./routes/authRoute";
 import customErrorHandler from "./middleware/customErrorHandler";
 import { AppDataSource } from "../src/db/data-source"
 
+const app = express();
 app.use(express.json())
 app.use("/api/users", userRoute);
 app.use("/api/login", authRoute);

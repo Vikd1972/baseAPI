@@ -5,8 +5,6 @@ import customError from '../customError/customError';
 import nameError from '../utils/utils';
 import ErrObj from '../customError/validationError';
 
-
-
 const validate = (schema: any) => async (request: Request, response: Response, next: NextFunction) => {
   
   try {

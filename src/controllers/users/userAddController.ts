@@ -1,36 +1,21 @@
 
 import { Handler } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { createHmac } from 'node:crypto';
 
 import User from '../../db/entity/User'
 import { usersRepo } from "../../db";
 import config from "../../config"
-import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
 
 require('express-async-errors');
-const crypto = require("crypto");
-import('node:crypto')
-
-const createHash = (pass: string) => {
-  const hash = crypto
-    .pbkdf2Sync(pass, config.salt, 1000, 64, `sha512`)
-    .toString(`hex`);
-  return hash;
-}
 
 const addUser: Handler = async (request, response, next) => {
   try {
     const { fullname, email, dob, pass } = request.body
-    if (!fullname ||!email || !dob || !pass ) {
-      throw customError(StatusCodes.PRECONDITION_FAILED, nameError.user_pf, request.body);
-    }
-
     const user = new User();
     user.fullname = fullname;
     user.email = email;
     user.dob = dob;
-    user.password = createHash(pass);
+    user.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
     
     await usersRepo.save(user);
     return response.status(200).json('user added');

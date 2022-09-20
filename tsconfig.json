@@ -10,7 +10,9 @@
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
+      "sourceMap": true,
+      "allowSyntheticDefaultImports": true,    
+      "esModuleInterop": true,  
    },
    "files":["/src/definitios/request.ts"]
 }
