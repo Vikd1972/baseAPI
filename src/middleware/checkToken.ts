@@ -12,23 +12,24 @@ require('express-async-errors');
 
 const secretWord = config.secretWord;
 
-export const checkToken = (request: AuthInfoRequest, response: Response, next: NextFunction) => {
+export const checkToken = async (request: AuthInfoRequest, response: Response, next: NextFunction) => {
   try {    
     if (request.headers.authorization) {
-      const decoded = jwt.verify(request.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload       
-      const userToLogin = usersRepo.findOneBy({
-        id: decoded.id,
-      });
+      const decoded = await jwt.verify(request.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload    
+      const userToLogin = await usersRepo
+        .createQueryBuilder("user")
+        .where("user.id = :id", { id: decoded.id })
+        .getOne();
+      
       if (!userToLogin) {
-        throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, nameError.user_nf);
+        throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
       } else {
-        userToLogin.then(result => {    
-          if (result) request.user = result;
-        })
-        return next()
+        request.user = userToLogin;
+        return next();
       }
+
     } else {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_ua, nameError.user_ua)
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_tokenNotFound, nameError.user_tokenNotFound)
     }
   } catch (err) {
     next(err)

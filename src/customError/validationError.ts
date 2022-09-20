@@ -1,5 +1,5 @@
 export type ErrObj = {
-  field: string; 
+  field?: string; 
   value: string; 
   message: string; 
 }[]

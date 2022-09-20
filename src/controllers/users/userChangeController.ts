@@ -12,13 +12,12 @@ require('express-async-errors');
 const changeUser: Handler = async (request, response, next) => {
   try {
     const { fullname, email, dob, pass } = request.body;
-    console.log(fullname);
 
     const userToChange = await usersRepo.findOneBy({
       email: email,
     });
     if (!userToChange) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_nf, request.body.oldemail);
+      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, email);
     }
     userToChange.fullname = fullname;
     userToChange.dob = dob;    
