@@ -8,29 +8,25 @@ import customError from '../customError/customError';
 import nameError from '../utils/utils';
 import { AuthInfoRequest } from '../definions/request';
 
-require('express-async-errors');
-
 const secretWord = config.secretWord;
 
-export const checkToken = async (request: AuthInfoRequest, response: Response, next: NextFunction) => {
+export const checkToken = async (req: AuthInfoRequest, res: Response, next: NextFunction) => {
   try {    
-    if (request.headers.authorization) {
-      const decoded = await jwt.verify(request.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload    
-      const userToLogin = await usersRepo
-        .createQueryBuilder("user")
-        .where("user.id = :id", { id: decoded.id })
-        .getOne();
-      
-      if (!userToLogin) {
-        throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
-      } else {
-        request.user = userToLogin;
-        return next();
-      }
-
-    } else {
+    if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.user_tokenNotFound, nameError.user_tokenNotFound)
-    }
+    } 
+    
+    const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
+    const userToLogin = await usersRepo.findOneBy({
+      id: decoded.id,
+    })
+
+    if (!userToLogin) {
+      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
+    } 
+    
+    req.user = userToLogin;
+    return next();    
   } catch (err) {
     next(err)
   };

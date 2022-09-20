@@ -1,31 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { ValidationError } from 'yup';
 
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
 import ErrObj from '../customError/validationError';
-import { ValidationError } from 'yup';
 
-const validate = (schema: any) => async (request: Request, response: Response, next: NextFunction) => {
+const validate = (schema: any) => async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    await schema.validate(request.body, { abortEarly: false });    
+    await schema.validate(req.body, { abortEarly: false });    
     return next();
   } catch (err) {
     const validationError: ErrObj = [];  
-    if (err instanceof ValidationError) {
-      err.inner.forEach(element => {
-        validationError.push({
-          field: element.path,
-          value: element.value,
-          message: element.errors[0],
-        });
-      })
+
+    if (err !instanceof ValidationError) {
+      throw customError(StatusCodes.PRECONDITION_FAILED, nameError.user_validationError, validationError)
     }
-    throw customError(StatusCodes.PRECONDITION_FAILED, nameError.user_validationError, validationError)
+
+    err.inner.forEach(element => {
+      validationError.push({
+        field: element.path,
+        value: element.value,
+        message: element.errors[0],
+      });
+    })
   }
 };
-
-
 
 export default validate

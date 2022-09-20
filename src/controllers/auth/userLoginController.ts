@@ -9,15 +9,11 @@ import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
-
-require('express-async-errors');
-
 const secretWord = config.secretWord;
 
-const loginUser: Handler = async (request, response, next) => {
+const loginUser: Handler = async (req, res, next) => {
   try {
-    const { email, pass } = request.body;   
-
+    const { email, pass } = req.body;   
     const userToLogin = await usersRepo.
       createQueryBuilder("user")
       .where("user.email = :email", { email: email })
@@ -29,18 +25,17 @@ const loginUser: Handler = async (request, response, next) => {
     }
 
     const hash = createHmac('sha256', pass).update(config.salt || '').digest('hex');
-    
+
     if (userToLogin.password !== hash) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.user_passwordIsWrong, userToLogin.fullname);      
-    } else {
-      delete userToLogin.password
-      return response.status(200).json({
-        user: {
-          userToLogin,
-        },
-        token: jwt.sign({ id: userToLogin.id }, secretWord || ''),
-      })
-    }
+    } 
+    
+    delete userToLogin.password
+    return res.status(StatusCodes.OK).json({
+      user: userToLogin,
+      token: jwt.sign({ id: userToLogin.id }, secretWord || ''),
+    })
+    
   } catch (err) {
     next(err);  
   };

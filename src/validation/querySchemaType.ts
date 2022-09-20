@@ -1,6 +1,6 @@
 interface QuerySchemaType {
   fullname?: string,
-  email?: string,
+  email: string,
   dob?: Date,
   pass?: string,
 }

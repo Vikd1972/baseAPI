@@ -14,9 +14,6 @@ export class User {
 
     @Column({type: 'date', nullable: true})
     dob: string
-
-    @Column({nullable: true})
-    isAdmin: boolean
     
     @Column({ type: 'varchar', nullable: true, select: false })
     password?: string

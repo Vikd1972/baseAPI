@@ -5,20 +5,21 @@ import { usersRepo } from "../../db";
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
-require('express-async-errors');
-
-const deleteUser: Handler = async (request, response, next) => {
+const deleteUser: Handler = async (req, res, next) => {
   try {
-    const email = request.body.email;
+    const email = req.body.email;
     const userToDelete = await usersRepo.findOneBy({
       email: email,
     });
+
     if (!userToDelete) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, request.body.email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, req.body.email);
     }
 
     await usersRepo.remove(userToDelete);
-    return response.status(200).json('delete user');
+
+    return res.status(StatusCodes.OK).json('user deleted');
+    
   } catch (err) {
     next(err)
   };
