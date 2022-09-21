@@ -7,12 +7,12 @@ import checkToken from "../middleware/checkToken";
 import addUser from '../controllers/users/userAddController'
 import changeUser from '../controllers/users/userChangeController'
 import deleteUser from '../controllers/users/userDeleteController'
-import getUser from '../controllers/users/userGetController'
+import getUsers from '../controllers/users/userGetController'
 
 const userRoute = express.Router();
 userRoute.post("/", validate(querySchemaAdd) ,addUser);
 userRoute.put("/", validate(querySchemaChange), checkToken, changeUser);
 userRoute.delete("/", checkToken, deleteUser);
-userRoute.get("/", checkToken, getUser);
+userRoute.get("/", checkToken, getUsers);
  
 export default userRoute;

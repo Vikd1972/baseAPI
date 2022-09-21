@@ -9,7 +9,7 @@ import config from '../../config';
 
 const changeUser: Handler = async (req, res, next) => {
   try {
-    const { fullname, email, dob, pass } = req.body;
+    const { fullname, email, pass } = req.body;
     const userToChange = await usersRepo.findOneBy({
       email: email,
     });
@@ -17,13 +17,16 @@ const changeUser: Handler = async (req, res, next) => {
     if (!userToChange) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
-
-    userToChange.fullname = fullname;
-    userToChange.dob = dob;    
-    userToChange.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
+    
+    if (fullname) userToChange.fullname = fullname;
+    if (pass) userToChange.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
     await usersRepo.save(userToChange);
 
-    return res.status(StatusCodes.OK).json('user data changed');
+    delete userToChange.password
+    return res.status(StatusCodes.OK).json({
+      message: 'user data changed',
+      user: userToChange
+    });
     
   } catch (err) {
     next(err)

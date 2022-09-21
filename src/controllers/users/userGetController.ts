@@ -5,19 +5,35 @@ import usersRepo from "../../db";
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
-const getUser: Handler = async (req, res, next) => {
-  try {
-    const users = await usersRepo.find();
-      
-    if (users.length === 0) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
+const getUsers: Handler = async (req, res, next) => {
+  try {    
+    if (req.body.id) {
+      const id = req.body.id;
+      const userToFind = await usersRepo.findOneBy({
+        id: id,
+      });
+  
+      if (!userToFind) {
+        throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
+      } 
+      return res.status(StatusCodes.OK).json({
+        user: userToFind
+      });
     }
 
-    return res.status(StatusCodes.OK).json({ users });
+    const users = await usersRepo.find();        
+    if (users.length === 0) {
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, 'no users in the database');
+    }
+  
+    return res.status(StatusCodes.OK).json({
+      users
+    });
+    
       
   } catch (err) {
     next(err)
   };
 };
 
-export default getUser;
+export default getUsers;

@@ -27,7 +27,10 @@ const addUser: Handler = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body)
     } 
 
-    return res.status(StatusCodes.OK).json('user added');
+    return res.status(StatusCodes.OK).json({
+      message: 'user added',
+      user: userToAdd
+    });
     
   } catch (err) {
     next(err); 

@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json())
 app.use("/api/users", userRoute);
 app.use("/api/login", authRoute);
-app.use("/", customErrorHandler);
+app.use(customErrorHandler);
 
 AppDataSource.initialize().then(async () => {
     app.listen(3000, function () {
