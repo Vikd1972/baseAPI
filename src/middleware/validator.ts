@@ -14,7 +14,7 @@ const validate = (schema: any) => async (req: Request, res: Response, next: Next
     const validationError: ErrObj = [];  
 
     if (err !instanceof ValidationError) {
-      throw customError(StatusCodes.PRECONDITION_FAILED, nameError.user_validationError, validationError)
+      throw customError(StatusCodes.PRECONDITION_FAILED, nameError.validationError, validationError)
     }
 
     err.inner.forEach(element => {

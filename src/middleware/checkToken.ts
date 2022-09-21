@@ -13,7 +13,7 @@ const secretWord = config.secretWord;
 export const checkToken: Handler = async (req: AuthInfoRequest, res: Response, next: NextFunction) => {
   try {    
     if (!req.headers.authorization) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_tokenNotFound, nameError.user_tokenNotFound)
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
     } 
     
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
@@ -22,7 +22,7 @@ export const checkToken: Handler = async (req: AuthInfoRequest, res: Response, n
     })
 
     if (!userToLogin) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
     
     req.user = userToLogin;

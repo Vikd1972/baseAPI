@@ -27,7 +27,7 @@ const signUser: Handler = async (req, res, next) => {
     });
 
     if (!userToSign) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_writingError, req.body)
+      throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body)
     } 
     
     return res.status(StatusCodes.OK).json({

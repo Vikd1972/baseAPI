@@ -10,7 +10,7 @@ const getUser: Handler = async (req, res, next) => {
     const users = await usersRepo.find();
       
     if (users.length === 0) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
 
     return res.status(StatusCodes.OK).json({ users });

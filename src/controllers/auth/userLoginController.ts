@@ -21,13 +21,13 @@ const loginUser: Handler = async (req, res, next) => {
       .getOne()
 
     if (!userToLogin) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
 
     const hash = createHmac('sha256', pass).update(config.salt || '').digest('hex');
 
     if (userToLogin.password !== hash) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.user_passwordIsWrong, userToLogin.fullname);      
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, userToLogin.fullname);      
     } 
     
     delete userToLogin.password

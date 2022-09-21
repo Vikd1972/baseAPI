@@ -13,7 +13,7 @@ const deleteUser: Handler = async (req, res, next) => {
     });
 
     if (!userToDelete) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, req.body.email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, req.body.email);
     }
 
     await usersRepo.remove(userToDelete);

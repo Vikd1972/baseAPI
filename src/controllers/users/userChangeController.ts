@@ -15,7 +15,7 @@ const changeUser: Handler = async (req, res, next) => {
     });
 
     if (!userToChange) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
 
     userToChange.fullname = fullname;
