@@ -3,14 +3,14 @@ import { DataSource } from "typeorm"
 
 import config from "../config"
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
     type: "postgres",
     host: config.host,
     port: config.port,
     username: config.user,
     password: config.pass,
     database: config.base,
-    synchronize: true,
+    synchronize: false,
     logging: false, 
     entities: [__dirname + '/entity/*{.js,.ts}'], 
     migrations: [],
@@ -18,7 +18,9 @@ export const AppDataSource = new DataSource({
 })
 
 AppDataSource.initialize()
-    .then(() => {
-        // here you can start to work with your database
-    })
-    .catch((error) => console.log(error))
+  .then(() => {
+      // here you can start to work with your database
+  })
+  .catch((error) => console.log(error))
+    
+export default AppDataSource

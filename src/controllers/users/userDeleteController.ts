@@ -17,7 +17,6 @@ const deleteUser: Handler = async (req, res, next) => {
     }
 
     await usersRepo.remove(userToDelete);
-
     return res.status(StatusCodes.OK).json('user deleted');
     
   } catch (err) {

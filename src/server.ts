@@ -4,7 +4,7 @@ import  express from "express";
 import userRoute from './routes/userRoute'
 import authRoute from "./routes/authRoute";
 import customErrorHandler from "./middleware/customErrorHandler";
-import { AppDataSource } from "../src/db/data-source"
+import AppDataSource from "../src/db/data-source"
 
 const app = express();
 app.use(express.json())

@@ -10,7 +10,6 @@ import config from '../../config';
 const changeUser: Handler = async (req, res, next) => {
   try {
     const { fullname, email, dob, pass } = req.body;
-
     const userToChange = await usersRepo.findOneBy({
       email: email,
     });

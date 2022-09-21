@@ -9,7 +9,6 @@ interface Config {
   secretWord?: string
 }
 
-
 const config: Config = {
   port: +(process.env.PORT ?? 4000),
   host: process.env.HOST,

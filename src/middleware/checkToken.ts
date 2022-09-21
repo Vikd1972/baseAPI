@@ -2,11 +2,11 @@ import { Response, NextFunction, Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken'
 
+import AuthInfoRequest from '../definions/request';
 import usersRepo from "../db";
 import config from "../config"
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
-import AuthInfoRequest from '../definions/request';
 
 const secretWord = config.secretWord;
 
@@ -26,7 +26,8 @@ export const checkToken: Handler = async (req: AuthInfoRequest, res: Response, n
     } 
     
     req.user = userToLogin;
-    return next();    
+    return next();  
+    
   } catch (err) {
     next(err)
   };

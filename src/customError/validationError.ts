@@ -1,4 +1,4 @@
-export type ErrObj = {
+type ErrObj = {
   field?: string; 
   value: string; 
   message: string; 

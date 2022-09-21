@@ -13,7 +13,7 @@ const getUser: Handler = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.user_userNotFound, nameError.user_userNotFound);
     }
 
-    res.status(StatusCodes.OK).json({ users });
+    return res.status(StatusCodes.OK).json({ users });
       
   } catch (err) {
     next(err)

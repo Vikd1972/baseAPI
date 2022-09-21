@@ -10,13 +10,9 @@ import deleteUser from '../controllers/users/userDeleteController'
 import getUser from '../controllers/users/userGetController'
 
 const userRoute = express.Router();
-
 userRoute.post("/", validate(querySchemaAdd) ,addUser);
-
 userRoute.put("/", validate(querySchemaChange), checkToken, changeUser);
-
 userRoute.delete("/", checkToken, deleteUser);
-
 userRoute.get("/", checkToken, getUser);
  
 export default userRoute;
