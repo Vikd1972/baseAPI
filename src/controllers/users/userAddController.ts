@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import User from '../../db/entity/User'
-import { usersRepo } from "../../db";
+import usersRepo from "../../db";
 import config from "../../config"
 
 const addUser: Handler = async (req, res, next) => {

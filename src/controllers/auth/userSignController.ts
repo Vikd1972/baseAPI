@@ -5,7 +5,7 @@ import { createHmac } from 'node:crypto';
 import { StatusCodes } from 'http-status-codes';
 
 import User from '../../db/entity/User'
-import { usersRepo } from "../../db";
+import usersRepo from "../../db";
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';

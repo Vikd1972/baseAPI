@@ -1,3 +1,5 @@
+import express from "express";
+
 import validate from "../middleware/validator";
 import querySchemaAdd from "../validation/querySchemaAdd";
 import querySchemaChange from "../validation/querySchemaChange";
@@ -7,7 +9,6 @@ import changeUser from '../controllers/users/userChangeController'
 import deleteUser from '../controllers/users/userDeleteController'
 import getUser from '../controllers/users/userGetController'
 
-const express = require("express");
 const userRoute = express.Router();
 
 userRoute.post("/", validate(querySchemaAdd) ,addUser);

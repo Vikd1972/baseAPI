@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken'
 import { createHmac } from  'node:crypto';
 
-import { usersRepo } from "../../db";
+import usersRepo from "../../db";
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';

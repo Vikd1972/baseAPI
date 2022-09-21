@@ -1,7 +1,7 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { usersRepo } from "../../db";
+import usersRepo from "../../db";
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
