@@ -18,8 +18,14 @@ const changeUser: Handler = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
     
-    if (fullname) userToChange.fullname = fullname;
-    if (pass) userToChange.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
+    if (fullname) {
+      userToChange.fullname = fullname
+    };
+
+    if (pass) {
+      userToChange.password = createHmac('sha256', pass).update(config.salt || '').digest('hex')
+    };
+    
     await usersRepo.save(userToChange);
 
     delete userToChange.password
