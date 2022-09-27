@@ -1,9 +1,7 @@
 import { object, string, date, SchemaOf } from 'yup';
-import { QuerySchemaLogin } from './querySchemaType';
+import { QuerySchemaAuth } from './querySchemaType';
 
-
-
-const querySchemaLogin: SchemaOf<QuerySchemaLogin> = object({     
+const querySchemaLogin: SchemaOf<QuerySchemaAuth> = object({     
   email: string().email('must be a valid email').required('Required Email'),
   pass: string().required('Required Password'),
 });
