@@ -6,7 +6,7 @@ import customError from '../customError/customError';
 import nameError from '../utils/utils';
 import ErrObj from '../customError/validationError';
 
-const validate = (schema: any) => async (req: Request, res: Response, next: NextFunction) => {  
+const validate = (schema: any) => async (req: Request, res: Response, next: NextFunction) => {      
   try {
     await schema.validate(req.body, { abortEarly: false });
     return next();
