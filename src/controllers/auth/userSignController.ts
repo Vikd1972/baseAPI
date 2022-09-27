@@ -18,7 +18,6 @@ const signUser: Handler = async (req, res, next) => {
     const user = new User();
     user.fullname = fullname;
     user.email = email;
-    user.dob = dob;
     user.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
     await usersRepo.save(user);
 
