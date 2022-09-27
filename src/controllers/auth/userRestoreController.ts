@@ -11,32 +11,25 @@ import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
 const secretWord = config.secretWord;
-
-const signUser: Handler = async (req, res, next) => {
+const restoreUser: Handler = async (req, res, next) => {
   try {
-    const { fullname, email, dob, pass } = req.body
-    const newUser = new User();
-    newUser.fullname = fullname;
-    newUser.email = email;
-    newUser.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
-    await usersRepo.save(newUser);
+    const token = req.body.token
 
+    const decoded = jwt.verify(token, secretWord || '') as jwt.JwtPayload
     const user = await usersRepo.findOneBy({
-      email: email,
-    });
+      id: decoded.id,
+    })
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body)
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
-    
     return res.status(StatusCodes.OK).json({
-      user: user,
-      token: jwt.sign({ id: user.id }, secretWord || ''),
-    })
+      user: user
+    });
     
   } catch (err) {
     next(err);
   };
 };
 
-export default signUser;
+export default restoreUser;

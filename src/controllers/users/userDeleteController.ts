@@ -8,19 +8,19 @@ import nameError from '../../utils/utils';
 const deleteUser: Handler = async (req, res, next) => {  
   try {
     const email = req.body.email;
-    const userToDelete = await usersRepo.findOneBy({
+    const user = await usersRepo.findOneBy({
       email: email,
     });
-    console.log(userToDelete);
+    console.log(user);
 
-    if (!userToDelete) {
+    if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, req.body.email);
     }
 
-    await usersRepo.remove(userToDelete);
+    await usersRepo.remove(user);
     return res.status(StatusCodes.OK).json({
       message: 'user deleted',
-      user: userToDelete
+      user: user
     });
     
   } catch (err) {

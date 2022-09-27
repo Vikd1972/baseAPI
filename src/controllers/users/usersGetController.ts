@@ -9,15 +9,15 @@ const getUsers: Handler = async (req, res, next) => {
   try {    
     if (req.body.id) {
       const id = req.body.id;
-      const userToFind = await usersRepo.findOneBy({
+      const user = await usersRepo.findOneBy({
         id: id,
       });
   
-      if (!userToFind) {
+      if (!user) {
         throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
       } 
       return res.status(StatusCodes.OK).json({
-        user: userToFind
+        user: user
       });
     }
 

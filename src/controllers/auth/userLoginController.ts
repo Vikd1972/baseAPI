@@ -14,26 +14,26 @@ const secretWord = config.secretWord;
 const loginUser: Handler = async (req, res, next) => {
   try {
     const { email, pass } = req.body;   
-    const userToLogin = await usersRepo.
+    const user = await usersRepo.
       createQueryBuilder("user")
       .where("user.email = :email", { email: email })
       .addSelect("user.password")
       .getOne()
 
-    if (!userToLogin) {
+    if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
 
     const hash = createHmac('sha256', pass).update(config.salt || '').digest('hex');
 
-    if (userToLogin.password !== hash) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, userToLogin.fullname);      
+    if (user.password !== hash) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);      
     } 
     
-    delete userToLogin.password
+    delete user.password
     return res.status(StatusCodes.OK).json({
-      user: userToLogin,
-      token: jwt.sign({ id: userToLogin.id }, secretWord || ''),
+      user: user,
+      token: jwt.sign({ id: user.id }, secretWord || ''),
     })
     
   } catch (err) {

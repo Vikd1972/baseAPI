@@ -17,15 +17,15 @@ export const checkToken: Handler = async (req: AuthInfoRequest, res: Response, n
     } 
     
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
-    const userToLogin = await usersRepo.findOneBy({
+    const user = await usersRepo.findOneBy({
       id: decoded.id,
     })
 
-    if (!userToLogin) {
+    if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
     
-    req.user = userToLogin;
+    req.user = user;
     return next();  
     
   } catch (err) {
