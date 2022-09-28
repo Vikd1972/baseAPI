@@ -12,7 +12,7 @@ import nameError from '../../utils/utils';
 
 const secretWord = config.secretWord;
 
-const restoreUser: Handler = async (req, res, next) => {
+const checkToken: Handler = async (req, res, next) => {
   try {
     const token = req.body.token
 
@@ -24,8 +24,10 @@ const restoreUser: Handler = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
+    console.log(user.id);
+    
     return res.status(StatusCodes.OK).json({
-      user: user
+      id: user.id
     });
     
   } catch (err) {
@@ -33,4 +35,4 @@ const restoreUser: Handler = async (req, res, next) => {
   };
 };
 
-export default restoreUser;
+export default checkToken;
