@@ -11,6 +11,7 @@ import nameError from '../utils/utils';
 const secretWord = config.secretWord;
 
 export const checkToken: Handler = async (req: AuthInfoRequest, res: Response, next: NextFunction) => {
+ 
   try {    
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
