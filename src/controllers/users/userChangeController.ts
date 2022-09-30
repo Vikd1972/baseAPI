@@ -21,7 +21,7 @@ const changeUser: Handler = async (req, res, next) => {
       id: decoded.id,
     })
     
-    const { fullname, email, pass } = req.body;
+    const { fullname, email, oldPassword, newPassword } = req.body;
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     } else {
@@ -31,11 +31,13 @@ const changeUser: Handler = async (req, res, next) => {
       if (email) {
         user.email = email
       };
-      if (pass) {
-        user.password = createHmac('sha256', pass).update(config.salt || '').digest('hex')
+      if (oldPassword && !newPassword) {
+        throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordError, email);
+      } else {
+        user.password = createHmac('sha256', newPassword).update(config.salt || '').digest('hex')
       };
     }
-    console.log(user);
+
     await usersRepo.save(user);
     delete user.password
     return res.status(StatusCodes.OK).json({

@@ -4,7 +4,8 @@ const nameError = {
   userNotFound: 'User not found',
   fieldsAreEmpty: 'One or more fields are empty',
   validationError: 'Data validation error',
-  writingError: 'Error writing data'
+  writingError: 'Error writing data',
+  passwordError: 'Passwords do not match'
 };
 
 export default nameError;
