@@ -14,6 +14,7 @@ const secretWord = config.secretWord;
 
 const restoreUser: Handler = async (req, res, next) => {
   try {
+    
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
     }

@@ -12,14 +12,12 @@ const secretWord = config.secretWord;
 
 const changeUser: Handler = async (req, res, next) => {
   try {
-    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;
-    console.log(req.body);
-
+    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;    
 
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
     }
-    const decoded = jwt.verify(req.headers.authorization, secretWord || '') as jwt.JwtPayload;
+    const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
 
     const user = await usersRepo.
       createQueryBuilder("user")

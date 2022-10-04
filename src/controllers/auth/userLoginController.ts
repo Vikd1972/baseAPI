@@ -29,7 +29,7 @@ const loginUser: Handler = async (req, res, next) => {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);
     }
 
-    // delete user.password
+    delete user.password
     return res.status(StatusCodes.OK).json({
       user: user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
