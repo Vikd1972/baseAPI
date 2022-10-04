@@ -14,20 +14,23 @@ const secretWord = config.secretWord;
 
 const restoreUser: Handler = async (req, res, next) => {
   try {
-    const token = req.body.token
+    if (!req.headers.authorization) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
+    }
 
-    const decoded = jwt.verify(token, secretWord || '') as jwt.JwtPayload
+    const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
     const user = await usersRepo.findOneBy({
       id: decoded.id,
     })
 
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
-    } 
+    }
+
     return res.status(StatusCodes.OK).json({
       user: user
     });
-    
+
   } catch (err) {
     next(err);
   };

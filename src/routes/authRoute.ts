@@ -11,6 +11,6 @@ import restoreUser from "../controllers/auth/userRestoreController";
 const authRoute = express.Router();
 authRoute.post("/login", validate(querySchemaLogin), loginUser);
 authRoute.post("/sign", validate(querySchemaUser), signUser);
-authRoute.post("/token", restoreUser);
+authRoute.get("/token", restoreUser);
 
 export default authRoute; 
