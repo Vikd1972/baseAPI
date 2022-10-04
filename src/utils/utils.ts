@@ -5,7 +5,8 @@ const nameError = {
   fieldsAreEmpty: 'One or more fields are empty',
   validationError: 'Data validation error',
   writingError: 'Error writing data',
-  passwordError: 'Passwords do not match'
+  passwordError: 'Passwords do not match',
+  newPassword: 'a new password must be entered'
 };
 
 export default nameError;

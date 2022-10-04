@@ -11,7 +11,6 @@ const deleteUser: Handler = async (req, res, next) => {
     const user = await usersRepo.findOneBy({
       email: email,
     });
-    console.log(user);
 
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, req.body.email);

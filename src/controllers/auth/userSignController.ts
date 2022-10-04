@@ -27,13 +27,13 @@ const signUser: Handler = async (req, res, next) => {
 
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body)
-    } 
-    
+    }
+
     return res.status(StatusCodes.OK).json({
       user: user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     })
-    
+
   } catch (err) {
     next(err);
   };
