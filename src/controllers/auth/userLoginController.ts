@@ -13,6 +13,7 @@ const secretWord = config.secretWord;
 
 const loginUser: Handler = async (req, res, next) => {
   try {
+    
     const { email, pass } = req.body;
     const user = await usersRepo.
       createQueryBuilder("user")
