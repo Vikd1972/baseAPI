@@ -6,7 +6,8 @@ const nameError = {
   validationError: 'Data validation error',
   writingError: 'Error writing data',
   passwordError: 'Passwords do not match',
-  newPassword: 'a new password must be entered'
+  newPassword: 'a new password must be entered',
+  errorLoading: 'Error loading file'
 };
 
 export default nameError;

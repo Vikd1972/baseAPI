@@ -10,5 +10,5 @@ import querySchemaUser from "../validation/querySchemaUser";
 const userRoute = express.Router();
 userRoute.delete("/", checkToken, deleteUser);
 userRoute.put("/", changeUser);
-userRoute.get("/", checkToken, getUsers);
+userRoute.get("/", getUsers);
 export default userRoute;

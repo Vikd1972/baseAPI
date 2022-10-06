@@ -3,17 +3,20 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number
 
-    @Column({nullable: true})
-    fullname: string
+  @Column({ nullable: true })
+  fullname: string
 
-    @Column({nullable: true})
-    email: string
-    
-    @Column({ type: 'varchar', nullable: true, select: false })
-    password?: string
+  @Column({ nullable: false })
+  email: string
+
+  @Column({ nullable: true })
+  photoFilePath: string
+
+  @Column({ type: 'varchar', nullable: true, select: false })
+  password?: string
 }
 
 export default User

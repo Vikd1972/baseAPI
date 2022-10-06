@@ -6,7 +6,7 @@ import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
 const getUsers: Handler = async (req, res, next) => {
-  try {    
+  try {        
     if (req.body.id) {
       const id = req.body.id;
       const user = await usersRepo.findOneBy({

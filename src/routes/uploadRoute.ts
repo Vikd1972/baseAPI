@@ -4,5 +4,5 @@ import uploadUserPhoto from "../controllers/upload/uploadController";
 import checkToken from "../middleware/checkToken";
 
 const uploadRoute = express.Router();
-uploadRoute.use("/", checkToken, uploadUserPhoto);
+uploadRoute.post("/", checkToken, uploadUserPhoto);
 export default uploadRoute;
