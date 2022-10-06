@@ -15,26 +15,25 @@ const secretWord = config.secretWord;
 const signUser: Handler = async (req, res, next) => {
   try {
     const { fullname, email, dob, pass } = req.body
-    const user = new User();
-    user.fullname = fullname;
-    user.email = email;
-    user.dob = dob;
-    user.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
-    await usersRepo.save(user);
+    const newUser = new User();
+    newUser.fullname = fullname;
+    newUser.email = email;
+    newUser.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
+    await usersRepo.save(newUser);
 
-    const userToSign = await usersRepo.findOneBy({
+    const user = await usersRepo.findOneBy({
       email: email,
     });
 
-    if (!userToSign) {
+    if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body)
-    } 
-    
+    }
+  
     return res.status(StatusCodes.OK).json({
-      user: userToSign,
-      token: jwt.sign({ id: userToSign.id }, secretWord || ''),
+      user: user,
+      token: jwt.sign({ id: user.id }, secretWord || ''),
     })
-    
+
   } catch (err) {
     next(err);
   };

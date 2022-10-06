@@ -11,9 +11,6 @@ export class User {
 
     @Column({nullable: false})
     email: string
-
-    @Column({type: 'date', nullable: true})
-    dob: string
     
     @Column({ type: 'varchar', nullable: true, select: false })
     password?: string
