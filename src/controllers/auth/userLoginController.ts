@@ -2,7 +2,10 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken'
-import { createHmac } from  'node:crypto';
+import { createHmac } from 'node:crypto';
+import {
+  createReadStream
+} from 'node:fs';
 
 import usersRepo from "../../db";
 import config from "../../config"
