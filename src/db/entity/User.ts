@@ -9,7 +9,7 @@ export class User {
     @Column({nullable: true})
     fullname: string
 
-    @Column({nullable: false})
+    @Column({nullable: true})
     email: string
     
     @Column({ type: 'varchar', nullable: true, select: false })

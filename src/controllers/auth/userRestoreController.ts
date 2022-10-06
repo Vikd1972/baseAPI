@@ -1,7 +1,8 @@
 
 import { Handler } from 'express';
 import * as jwt from 'jsonwebtoken'
-import { createHmac } from 'node:crypto';
+// import { createHmac } from 'node:crypto';
+import { createHmac } from 'crypto';
 import { StatusCodes } from 'http-status-codes';
 
 import User from '../../db/entity/User'
