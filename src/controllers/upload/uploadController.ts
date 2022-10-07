@@ -1,6 +1,7 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
+import { v4 } from 'uuid';
 import fs from 'fs';
 
 import usersRepo from "../../db";
@@ -19,8 +20,8 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
 
     const file = req.body.file;    
     const [data, base64 ]= file.split(',')
-    const path = '/home/dvo/docs/projects/baseAPI/uploads';
-    const fileName = `photo_${decoded.id}`;
+    let path = '/home/dvo/docs/projects/baseAPI/src/uploads';
+    const fileName = `photo_${v4()}`;
     const filExtension = data.slice(11, 14)
     const buffer = Buffer.from(base64, 'base64');
     
@@ -33,12 +34,18 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
     const user = await usersRepo.findOneBy({
       id: decoded.id,
     })
-   
+    
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
+    if (user.photoFilePath) {
+      const file = user.photoFilePath;
+      fs.unlink(`${path}/${file}`, (err => {
+        if (err) console.log(err);
+      }));
+    }
 
-    user.photoFilePath = `${path}/${fileName}.${filExtension}`;
+    user.photoFilePath = `${fileName}.${filExtension}`;
     await usersRepo.save(user);
     delete user.password;
     

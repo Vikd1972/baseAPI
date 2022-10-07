@@ -10,6 +10,7 @@ var cors = require('cors');
 app.use(express.json())
 app.use(cors());
 app.use(express.static(__dirname));
+
 app.use(multer({ dest: "uploads" }).single("filedata"));
 app.use("/", apiRoute);
 
