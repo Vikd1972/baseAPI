@@ -18,9 +18,9 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
 
-    const file = req.body.file;    
+    const file = req.body.file;      
     const [data, base64 ]= file.split(',')
-    let path = '/home/dvo/docs/projects/baseAPI/src/uploads';
+    let path = '/home/dvo/docs/projects/baseAPI/uploads';
     const fileName = `photo_${v4()}`;
     const filExtension = data.slice(11, 14)
     const buffer = Buffer.from(base64, 'base64');
