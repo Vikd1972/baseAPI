@@ -6,7 +6,8 @@ interface Config {
   base?: string,
   pass?: string,
   salt?: string,
-  secretWord?: string
+  secretWord?: string,
+  path?: string,
 }
 
 const config: Config = {
@@ -16,7 +17,8 @@ const config: Config = {
   base: process.env.DB_BASENAME,
   pass: process.env.DB_PASS,
   salt: process.env.PASSWORD_SALT,
-  secretWord: process.env.SECRET_WORD
+  secretWord: process.env.SECRET_WORD,
+  path: process.env.LOCAL_PATH,
 };
 
 export default config;

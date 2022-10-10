@@ -20,14 +20,14 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
 
     const file = req.body.file;      
     const [data, base64 ]= file.split(',')
-    let path = '/home/dvo/docs/projects/baseAPI/uploads';
+    const path = config.path;
     const fileName = `photo_${v4()}`;
-    const filExtension = data.slice(11, 14)
+    const fileExtension = data.slice(11, 14)
     const buffer = Buffer.from(base64, 'base64');
     
-    fs.writeFile(`${path}/${fileName}.${filExtension}`, buffer, (err) => {
+    fs.writeFile(`${path}/${fileName}.${fileExtension}`, buffer, (err) => {
       if (err) {
-        throw customError(StatusCodes.BAD_REQUEST, nameError.errorLoading, nameError.errorLoading)
+        throw customError(StatusCodes.BAD_REQUEST, nameError.errorLoading, nameError.errorLoading)        
       }
     })
     
@@ -45,7 +45,7 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
       }));
     }
 
-    user.photoFilePath = `${fileName}.${filExtension}`;
+    user.photoFilePath = `${fileName}.${fileExtension}`;
     await usersRepo.save(user);
     delete user.password;
     
