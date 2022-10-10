@@ -1,6 +1,6 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-// import { createHmac } from 'node:crypto';
+// import { createHmac } from 'nodejs';
 import { createHmac } from 'crypto';
 import * as jwt from 'jsonwebtoken'
 
@@ -13,7 +13,7 @@ const secretWord = config.secretWord;
 
 const changeUser: Handler = async (req, res, next) => {
   try {
-    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;    
+    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;
 
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
@@ -26,7 +26,7 @@ const changeUser: Handler = async (req, res, next) => {
       .addSelect("user.password")
       .getOne()
 
-    const hash = createHmac('sha256', oldPassword).update(config.salt || '').digest('hex');
+    const hash = createHmac('sha256', oldPassword || '').update(config.salt || '').digest('hex');
 
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
@@ -54,13 +54,14 @@ const changeUser: Handler = async (req, res, next) => {
       if (oldPassword && newPassword !== confirmPassword) {
         throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordError, user.email);
       }
-      
+
       if (oldPassword && newPassword === confirmPassword) {
         user.password = createHmac('sha256', newPassword).update(config.salt || '').digest('hex')
       };
     }
 
     await usersRepo.save(user);
+
     delete user.password
     return res.status(StatusCodes.OK).json({
       user: user

@@ -28,7 +28,6 @@ const restoreUser: Handler = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
-
     return res.status(StatusCodes.OK).json({
       user: user
     });

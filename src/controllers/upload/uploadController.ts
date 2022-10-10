@@ -39,16 +39,15 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     } 
     if (user.photoFilePath) {
-      const file = user.photoFilePath;
+      const file = user.photoFilePath.slice(29);
       fs.unlink(`${path}/${file}`, (err => {
         if (err) console.log(err);
       }));
     }
 
-    user.photoFilePath = `${fileName}.${fileExtension}`;
+    user.photoFilePath = `http://localhost:3001/uploads/${fileName}.${fileExtension}`;
     await usersRepo.save(user);
     delete user.password;
-    
     return res.status(StatusCodes.OK).json({
       user: user
     });

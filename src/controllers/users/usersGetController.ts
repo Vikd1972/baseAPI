@@ -16,6 +16,7 @@ const getUsers: Handler = async (req, res, next) => {
       if (!user) {
         throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
       } 
+      user.photoFilePath = `http://localhost:3001/uploads/${user.photoFilePath}`;
       return res.status(StatusCodes.OK).json({
         user: user
       });
@@ -25,7 +26,6 @@ const getUsers: Handler = async (req, res, next) => {
     if (users.length === 0) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, 'no users in the database');
     }
-  
     return res.status(StatusCodes.OK).json({
       users
     });
