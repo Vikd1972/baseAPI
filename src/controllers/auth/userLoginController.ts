@@ -15,7 +15,7 @@ const secretWord = config.secretWord;
 const loginUser: Handler = async (req, res, next) => {
   try {
     
-    const { email, pass } = req.body;
+    const { email, pass } = req.body.data;
     const user = await usersRepo.
       createQueryBuilder("user")
       .where("user.email = :email", { email: email })
