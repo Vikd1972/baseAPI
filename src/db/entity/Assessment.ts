@@ -18,7 +18,10 @@ export class Assessment {
   rating: number
 
   @Column({ nullable: false })
-  comments: string
+  comment: string
+
+  @Column({ nullable: false })
+  commentData: Date
 
   @ManyToOne(() => Book, (Book) => Book.assessment, {
     nullable: false,

@@ -30,6 +30,9 @@ export class Book {
   description: string
 
   @Column({ nullable: true })
+  releasedAt: Date;
+
+  @Column({ nullable: true })
   paperbackPrice: string
 
   @Column({ nullable: true })
