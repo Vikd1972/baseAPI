@@ -1,7 +1,6 @@
 
 import { Handler } from 'express';
 import * as jwt from 'jsonwebtoken'
-// import { createHmac } from 'node:crypto';
 import { createHmac } from 'crypto';
 import { StatusCodes } from 'http-status-codes';
 
@@ -15,11 +14,11 @@ const secretWord = config.secretWord;
 
 const signUser: Handler = async (req, res, next) => {
   try {    
-    const { fullname, email, dob, pass } = req.body
+    const { fullname, email, password } = req.body
     const newUser = new User();
     newUser.fullname = fullname;
     newUser.email = email;
-    newUser.password = createHmac('sha256', pass).update(config.salt || '').digest('hex');
+    newUser.password = createHmac('sha256', password).update(config.salt || '').digest('hex');
     await usersRepo.save(newUser);
     const user = await usersRepo.findOneBy({
       email: email,

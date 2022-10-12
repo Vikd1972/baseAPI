@@ -11,15 +11,15 @@ import nameError from '../../utils/utils';
 
 const secretWord = config.secretWord;
 
-const uploadUserPhoto: Handler = async (req, res, next) => {
+const uploadUserPhoto: Handler = async (req, res, next) => {  
   try {
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
-
-    const file = req.body.file;      
-    const [data, base64 ]= file.split(',')
+    
+    const file = req.body.userPhoto;      
+    const [data, base64] = file.split(',')
     const path = config.path;
     const fileName = `photo_${v4()}`;
     const fileExtension = data.slice(11, 14)

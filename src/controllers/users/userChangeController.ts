@@ -1,6 +1,5 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-// import { createHmac } from 'nodejs';
 import { createHmac } from 'crypto';
 import * as jwt from 'jsonwebtoken'
 

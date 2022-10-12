@@ -1,11 +1,11 @@
 interface QuerySchemaUser {
   fullname?: string,
   email?: string,
-  pass?: string,
+  password?: string,
 }
 interface QuerySchemaLogin {
   email: string,
-  pass: string,
+  password: string,
 }
 
 export { QuerySchemaUser, QuerySchemaLogin };

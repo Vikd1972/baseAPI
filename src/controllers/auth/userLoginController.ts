@@ -2,7 +2,6 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken'
-// import { createHmac } from 'nodejs';
 import { createHmac } from 'crypto';
 
 import usersRepo from "../../db";
@@ -13,9 +12,8 @@ import nameError from '../../utils/utils';
 const secretWord = config.secretWord;
 
 const loginUser: Handler = async (req, res, next) => {
-  try {
-    
-    const { email, pass } = req.body.data;
+  try {    
+    const { email, password } = req.body;
     const user = await usersRepo.
       createQueryBuilder("user")
       .where("user.email = :email", { email: email })
@@ -25,7 +23,7 @@ const loginUser: Handler = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
 
-    const hash = createHmac('sha256', pass).update(config.salt || '').digest('hex');
+    const hash = createHmac('sha256', password).update(config.salt || '').digest('hex');
     
     if (user.password !== hash) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);
