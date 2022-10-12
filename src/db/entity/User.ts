@@ -1,4 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  Column
+} from "typeorm"
+
+import Book from "./Book"
+import Assessment from "./Assessment"
+
 
 @Entity()
 export class User {
@@ -17,6 +28,17 @@ export class User {
 
   @Column({ type: 'varchar', nullable: true, select: false })
   password?: string
+
+  @ManyToMany(() => Book, (Book) => Book.users, {
+    cascade: true,
+  })
+  favorites: Book[]
+
+  @OneToMany(() => Assessment, (Assessment) => Assessment.user, {
+    cascade: true,
+  })
+  @JoinTable()
+  assessment: Assessment[];
 }
 
 export default User

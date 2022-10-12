@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { createHmac } from 'crypto';
 import * as jwt from 'jsonwebtoken'
 
-import usersRepo from "../../db";
+import {usersRepo }from "../../db";
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import config from "../../config"

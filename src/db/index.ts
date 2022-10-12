@@ -1,6 +1,8 @@
 import AppDataSource from "./data-source";
 import User from "./entity/User";
+import Book from "./entity/Book";
 
-const usersRepo = AppDataSource.getRepository(User);
+export const usersRepo = AppDataSource.getRepository(User);
 
-export default usersRepo;
+export const bookRepo = AppDataSource.getRepository(Book);
+

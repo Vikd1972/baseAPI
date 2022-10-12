@@ -3,7 +3,7 @@ import { Handler } from 'express';
 import * as jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes';
 
-import usersRepo from "../../db";
+import {usersRepo} from "../../db";
 import config from "../../config"
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
