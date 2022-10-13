@@ -17,10 +17,10 @@ export class Book {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   name: string
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   author: string
 
   @Column({ nullable: true })
@@ -33,28 +33,36 @@ export class Book {
   releasedAt: Date;
 
   @Column({ nullable: true })
-  paperbackPrice: string
+  paperbackPrice: number
 
   @Column({ nullable: true })
-  paperbackQuantity: string
+  paperbackQuantity: number
 
   @Column({ nullable: true })
-  hardcoverPrice: string
+  hardcoverPrice: number
 
   @Column({ nullable: true })
-  hardcoverQuantity: string
+  hardcoverQuantity: number
 
-  @ManyToMany(() => User, (User) => User.favorites)
+  @Column({ nullable: true })
+  isNew: boolean
+
+  @Column({ nullable: true })
+  isBestseller: boolean
+
+  @ManyToMany(() => User, (User) => User.favorites, {
+    cascade: true,
+  })
   @JoinTable()
   users: User[]
 
   @OneToMany(() => Assessment, (Assessment) => Assessment.book, {
     cascade: true,
   })
-  @JoinColumn()
+  @JoinTable()
   assessment: Assessment[];
 
-  @ManyToMany(() => Genre, (Genre) => Genre.id, {
+  @ManyToMany(() => Genre, (genre) => genre.id, {
     cascade: true,
   })
   @JoinTable()

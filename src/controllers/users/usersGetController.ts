@@ -29,7 +29,7 @@ const getUsers: Handler = async (req, res, next) => {
     return res.status(StatusCodes.OK).json({
       users
     });
-    
+  
       
   } catch (err) {
     next(err)
