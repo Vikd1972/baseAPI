@@ -1,4 +1,4 @@
-import { bookRepo, genreRepo } from '..';
+import { booksRepo, genreRepo } from '..';
 import { connect } from '../data-source';
 
 type BookType = {
@@ -521,7 +521,7 @@ const books: BookType[] = [
   for (let i = 0; i < books.length; i++) {
     const book = books[i];
 
-    const newBook = bookRepo.create({
+    const newBook = booksRepo.create({
       ...book,
       genres: book.genres.map((genre) => {
         return genres.find((g) => g.name === genre) || {};
@@ -530,6 +530,6 @@ const books: BookType[] = [
       assessment: []
     });
 
-    await bookRepo.save(newBook);
+    await booksRepo.save(newBook);
   }
 })();
