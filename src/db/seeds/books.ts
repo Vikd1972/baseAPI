@@ -172,7 +172,7 @@ const books: BookType[] = [
     makes it easy to whip up enchanting treats, while
     njoying captivating illustrations of the princesses
     and their friends.`,
-    releasedAt: new Date(2021, 09, 28),
+    releasedAt: new Date(2021, 9, 28),
     paperbackPrice: 749,
     paperbackQuantity: 5,
     hardcoverPrice: 949,
@@ -192,7 +192,7 @@ const books: BookType[] = [
     line tracing, and more with dozens of handwriting exercises
     that engage their minds and boost their reading and writing
     comprehension.`,
-    releasedAt: new Date(2019, 08, 27),
+    releasedAt: new Date(2019, 8, 27),
     paperbackPrice: 125,
     paperbackQuantity: 5,
     hardcoverPrice: 0,
@@ -517,7 +517,6 @@ const books: BookType[] = [
 (async () => {
   await connect();
   const genres = await genreRepo.find();
-  console.log(genres);
 
   for (let i = 0; i < books.length; i++) {
     const book = books[i];
@@ -526,12 +525,11 @@ const books: BookType[] = [
       ...book,
       genres: book.genres.map((genre) => {
         return genres.find((g) => g.name === genre) || {};
-      })
+      }),
+      users: [],
+      assessment: []
     });
 
     await bookRepo.save(newBook);
-
-    const bookss = await bookRepo.find();
-    console.log(bookss);
   }
 })();

@@ -50,9 +50,7 @@ export class Book {
   @Column({ nullable: true })
   isBestseller: boolean
 
-  @ManyToMany(() => User, (User) => User.favorites, {
-    cascade: true,
-  })
+  @ManyToMany(() => User, (User) => User.favorites)
   @JoinTable()
   users: User[]
 
