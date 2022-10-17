@@ -4,11 +4,11 @@ import Cart from '../../db/entity/Cart';
 
 import { booksRepo, usersRepo, cartRepo } from "../../db";
 
-const addBookToCart: Handler = async (req, res, next) => {
+const getCart: Handler = async (req, res, next) => {
   try {
     const userId = req.body.userId;
     const bookId = req.body.bookId;
-    
+
     const newCart = new Cart();
 
     const book = await booksRepo.findOne({
@@ -27,25 +27,24 @@ const addBookToCart: Handler = async (req, res, next) => {
       where: {
         id: userId
       }
-    });    
-    
+    });
+
     newCart.count = 1;
     if (user) newCart.user = user;
-    if (book) newCart.book = book;    
-    
+    if (book) newCart.book = book;
+
     await cartRepo.save(newCart);
-    
+
     const userCart = await cartRepo.find({
       relations: {
         book: true,
-        user: true
       },
       where: {
         user: {
           id: userId,
         },
       },
-    })    
+    })
 
     return res.status(StatusCodes.OK).json({
       userCart
@@ -56,4 +55,4 @@ const addBookToCart: Handler = async (req, res, next) => {
   };
 };
 
-export default addBookToCart;
+export default getCart;
