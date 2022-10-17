@@ -11,7 +11,7 @@ import nameError from '../../utils/utils';
 
 const secretWord = config.secretWord;
 
-const loginUser: Handler = async (req, res, next) => {
+const authUser: Handler = async (req, res, next) => {
   try {    
     const { email, password } = req.body;
     const user = await usersRepo.
@@ -40,4 +40,4 @@ const loginUser: Handler = async (req, res, next) => {
   };
 };
 
-export default loginUser;
+export default authUser;

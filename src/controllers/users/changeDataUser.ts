@@ -10,7 +10,7 @@ import config from "../../config"
 
 const secretWord = config.secretWord;
 
-const changeUser: Handler = async (req, res, next) => {
+const changeDataUser: Handler = async (req, res, next) => {
   try {
     const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;
 
@@ -71,4 +71,4 @@ const changeUser: Handler = async (req, res, next) => {
   };
 };
 
-export default changeUser;
+export default changeDataUser;

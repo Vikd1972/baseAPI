@@ -12,7 +12,7 @@ import nameError from '../../utils/utils';
 
 const secretWord = config.secretWord;
 
-const signUser: Handler = async (req, res, next) => {
+const signUpUser: Handler = async (req, res, next) => {
   try {    
     const { fullname, email, password } = req.body
     const newUser = new User();
@@ -37,4 +37,4 @@ const signUser: Handler = async (req, res, next) => {
   };
 };
 
-export default signUser;
+export default signUpUser;
