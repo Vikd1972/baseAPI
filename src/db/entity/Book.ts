@@ -10,7 +10,8 @@ import {
 
 import User from "./User"
 import Assessment from "./Assessment"
-import  Genre from "./Genre"
+import Genre from "./Genre"
+import Cart from "./Cart"
 
 @Entity()
 export class Book {
@@ -56,15 +57,24 @@ export class Book {
 
   @OneToMany(() => Assessment, (Assessment) => Assessment.book, {
     cascade: true,
+    eager: true,
   })
   @JoinTable()
   assessment: Assessment[];
 
   @ManyToMany(() => Genre, (genre) => genre.id, {
     cascade: true,
+    eager: true,
   })
   @JoinTable()
   genres: Genre[];
+
+  @OneToMany(() => Cart, (Cart) => Cart.book, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  cart: Cart[];
 }
 
 export default Book

@@ -17,7 +17,7 @@ const restoreUser: Handler = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
-    const user = await usersRepo.findOneBy({
+    const user = await usersRepo.findOneBy({      
       id: decoded.id,
     })
 

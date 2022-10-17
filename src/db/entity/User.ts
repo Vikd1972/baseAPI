@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToMany,
+  JoinColumn,
   JoinTable,
   OneToMany,
   Column
@@ -9,6 +10,7 @@ import {
 
 import Book from "./Book"
 import Assessment from "./Assessment"
+import Cart from "./Cart"
 
 
 @Entity()
@@ -31,14 +33,23 @@ export class User {
 
   @ManyToMany(() => Book, (Book) => Book.users, {
     cascade: true,
+    eager: true,
   })
   favorites: Book[]
 
   @OneToMany(() => Assessment, (Assessment) => Assessment.user, {
     cascade: true,
+    eager: true,
   })
   @JoinTable()
-  assessment: Assessment[];
+  assessment: Assessment[]
+
+  @OneToMany(() => Cart, (Cart) => Cart.user, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable()
+  cart: Cart[];
 }
 
 export default User

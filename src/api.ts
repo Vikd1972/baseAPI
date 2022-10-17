@@ -6,6 +6,7 @@ import booksRoute from "./routes/booksRoute";
 import usersRoute from './routes/usersRoute'
 import authRoute from "./routes/authRoute";
 import uploadRoute from "./routes/uploadRoute";
+import cartRoute from "./routes/cartRoute";
 import customErrorHandler from "./middleware/customErrorHandler";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(multer({ dest: "uploads" }).single("filedata"));
 app.use("/api/books", booksRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/cart", cartRoute);
 app.use("/api/upload", uploadRoute);
 app.use(customErrorHandler);
 

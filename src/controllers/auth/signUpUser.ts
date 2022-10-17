@@ -19,7 +19,9 @@ const signUpUser: Handler = async (req, res, next) => {
     newUser.fullname = fullname;
     newUser.email = email;
     newUser.password = createHmac('sha256', password).update(config.salt || '').digest('hex');
+    
     await usersRepo.save(newUser);
+
     const user = await usersRepo.findOneBy({
       email: email,
     });

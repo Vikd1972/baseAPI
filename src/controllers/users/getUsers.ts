@@ -22,7 +22,13 @@ const getUsers: Handler = async (req, res, next) => {
       });
     }
 
-    const users = await usersRepo.find();        
+    const users = await usersRepo.find({
+      relations: {
+        cart: true,
+        assessment: true,
+        favorites: true,
+      },
+    });        
     if (users.length === 0) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, 'no users in the database');
     }
