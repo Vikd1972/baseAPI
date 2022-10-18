@@ -21,8 +21,8 @@ const uploadUserPhoto: Handler = async (req, res, next) => {
     const file = req.body.userPhoto;      
     const [data, base64] = file.split(',')
     const path = config.path;
-    const fileName = `photo_${v4()}`;
-    const fileExtension = data.slice(11, 14)
+    const fileName = `photo_${v4()}`;    
+    const fileExtension = data.slice(data.indexOf('/') + 1, data.indexOf(';'))
     const buffer = Buffer.from(base64, 'base64');
     
     fs.writeFile(`${path}/${fileName}.${fileExtension}`, buffer, (err) => {

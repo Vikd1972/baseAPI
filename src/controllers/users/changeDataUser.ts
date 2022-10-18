@@ -12,7 +12,7 @@ const secretWord = config.secretWord;
 
 const changeDataUser: Handler = async (req, res, next) => {
   try {
-    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;
+    const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;    
 
     if (!req.headers.authorization) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound)

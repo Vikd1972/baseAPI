@@ -3,7 +3,7 @@ import { QuerySchemaUser } from './querySchemaType';
   
 const querySchemaUser: SchemaOf<QuerySchemaUser> = object({  
   fullname: string().matches(/^$|\w{3,}/,'must be at least 3 characters long'),  
-  email: string().email('must be a valid email').required('Required Email'),
+  email: string().email('must be a valid email'),
   password: string().matches(/^$|\w{3,}/, 'must be at least 3 characters long'),    
 });
 
