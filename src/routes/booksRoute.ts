@@ -2,10 +2,10 @@ import express from "express";
 
 import getBooks from "../controllers/books/getAllBooks";
 import getDetailBook from "../controllers/books/getOneBook";
-import getRandomBook from "../controllers/books/getRandomBook";
+import getRandomBooks from "../controllers/books/getRandomBooks";
 
 const booksRoute = express.Router();
 booksRoute.post("/detail", getDetailBook);
-booksRoute.post("/random", getRandomBook);
+booksRoute.get("/", getRandomBooks);
 booksRoute.post("/", getBooks);
 export default booksRoute;

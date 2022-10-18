@@ -36,10 +36,6 @@ const addBookToCart: Handler = async (req, res, next) => {
     await cartRepo.save(newCart);
     
     const userCart = await cartRepo.find({
-      relations: {
-        book: true,
-        user: true
-      },
       where: {
         user: {
           id: userId,

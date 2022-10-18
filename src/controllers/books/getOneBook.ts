@@ -13,6 +13,11 @@ const getDetailBook: Handler = async (req, res, next) => {
       id: id,
     });
 
+    if (book) {
+      book.hardcoverPrice = book.hardcoverPrice / 100;
+      book.paperbackPrice = book.paperbackPrice / 100;
+    }   
+
     return res.status(StatusCodes.OK).json({
       quantityBooks,
       book

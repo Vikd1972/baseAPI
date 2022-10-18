@@ -1,39 +1,11 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Cart from '../../db/entity/Cart';
 
-import { booksRepo, usersRepo, cartRepo } from "../../db";
+import { cartRepo } from "../../db";
 
 const getCart: Handler = async (req, res, next) => {
   try {
-    const userId = req.body.userId;
-    const bookId = req.body.bookId;
-
-    const newCart = new Cart();
-
-    const book = await booksRepo.findOne({
-      relations: {
-        cart: true
-      },
-      where: {
-        id: bookId
-      }
-    });
-
-    const user = await usersRepo.findOne({
-      relations: {
-        cart: true
-      },
-      where: {
-        id: userId
-      }
-    });
-
-    newCart.count = 1;
-    if (user) newCart.user = user;
-    if (book) newCart.book = book;
-
-    await cartRepo.save(newCart);
+    const id = req.body.id;
 
     const userCart = await cartRepo.find({
       relations: {
@@ -41,14 +13,14 @@ const getCart: Handler = async (req, res, next) => {
       },
       where: {
         user: {
-          id: userId,
+          id: id,
         },
       },
     })
 
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json(
       userCart
-    });
+    );
 
   } catch (err) {
     next(err)
