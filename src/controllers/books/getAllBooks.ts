@@ -5,11 +5,28 @@ import { booksRepo } from "../../db";
 
 const getBooks: Handler = async (req, res, next) => {
   try {
-    const { skip, pagination } = req.body;
+    let currentPage: number = req.body.currentPage;
+    const pagination: number = req.body.pagination;
 
-    const quantityBooks = await booksRepo.count()
+    const quantityBooks = await booksRepo.count();
+    const quantityPages = Math.ceil(quantityBooks / pagination);
+    if (currentPage < 1) {
+      currentPage = 1;
+    } else if (currentPage > quantityPages) {
+      currentPage = quantityPages
+    };
+    const skip = (pagination * currentPage) - pagination;  
 
-    let books = await booksRepo.find({
+    const serviceInfo = {
+      quantityBooks: quantityBooks,
+      quantityPages: quantityPages,
+      activePage: currentPage,      
+      prevPage: currentPage == 1 ? 1 : currentPage - 1,
+      nextPage: currentPage == quantityPages ? currentPage : currentPage + 1,
+      booksPerPage: pagination,
+    }
+
+    const books = await booksRepo.find({
       skip: skip,
       take: pagination,
     });
@@ -20,7 +37,7 @@ const getBooks: Handler = async (req, res, next) => {
     })
 
     return res.status(StatusCodes.OK).json({
-      quantityBooks,
+      serviceInfo,
       books
     });
 

@@ -5,7 +5,8 @@ import { booksRepo } from "../../db";
 
 const getDetailBook: Handler = async (req, res, next) => {
   try {
-    const id = req.body.id;
+    const activePage = req.body.activePage;
+    const id = req.body.id;    
 
     const book = await booksRepo.findOneBy({
       id: id,
