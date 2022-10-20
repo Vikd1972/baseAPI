@@ -8,32 +8,46 @@ const addBookToCart: Handler = async (req, res, next) => {
   try {
     const userId = req.body.userId;
     const bookId = req.body.bookId;
-    
-    const newCart = new Cart();
 
-    const book = await booksRepo.findOne({
-      relations: {
-        cart: true
-      },
+    const cart = await cartRepo.find({
       where: {
-        id: bookId
-      }
-    });
-
-    const user = await usersRepo.findOne({
-      relations: {
-        cart: true
+        book: {
+          id: bookId,
+        },
+        user: {
+          id: userId,
+        },
       },
-      where: {
-        id: userId
-      }
-    });    
+    })  
     
-    newCart.count = 1;
-    if (user) newCart.user = user;
-    if (book) newCart.book = book;    
-    
-    await cartRepo.save(newCart);
+    if (cart.length == 0) {
+      
+      const newCart = new Cart();
+  
+      const book = await booksRepo.findOne({
+        relations: {
+          cart: true
+        },
+        where: {
+          id: bookId
+        }
+      });
+  
+      const user = await usersRepo.findOne({
+        relations: {
+          cart: true
+        },
+        where: {
+          id: userId
+        }
+      });    
+      
+      newCart.count = 1;
+      if (user) newCart.user = user;
+      if (book) newCart.book = book;    
+      
+      await cartRepo.save(newCart);
+    }
     
     const userCart = await cartRepo.find({
       where: {
