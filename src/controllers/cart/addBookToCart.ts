@@ -50,6 +50,9 @@ const addBookToCart: Handler = async (req, res, next) => {
     }
     
     const userCart = await cartRepo.find({
+      relations: {
+        book: true,
+      },
       where: {
         user: {
           id: userId,

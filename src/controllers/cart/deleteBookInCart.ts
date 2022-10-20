@@ -29,7 +29,6 @@ const deleteBookInCart: Handler = async (req, res, next) => {
     const userCart = await cartRepo.find({
       relations: {
         book: true,
-        user: true
       },
       where: {
         user: {
