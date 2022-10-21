@@ -6,8 +6,7 @@ import { booksRepo, usersRepo, cartRepo } from "../../db";
 
 const addBookToCart: Handler = async (req, res, next) => {
   try {
-    const userId = req.body.userId;
-    const bookId = req.body.bookId;
+    const {userId, bookId} = req.body;
 
     const cart = await cartRepo.find({
       where: {

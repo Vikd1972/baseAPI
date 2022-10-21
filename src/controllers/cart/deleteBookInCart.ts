@@ -7,9 +7,7 @@ import nameError from '../../utils/utils';
 
 const deleteBookInCart: Handler = async (req, res, next) => {  
   try {    
-    const id = req.body.id;
-    const userId = req.body.userId;
-
+    const {id, userId} = req.body;
     
     const bookInCart = await cartRepo.find({
       where: {

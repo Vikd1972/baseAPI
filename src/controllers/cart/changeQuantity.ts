@@ -5,14 +5,14 @@ import { cartRepo } from "../../db";
 
 const changeQuantity: Handler = async (req, res, next) => {
   try {
-    const userId = req.body.userId;
+    const {userId, id, count} = req.body;
 
     const cart = await cartRepo.findOneBy({
-      id: req.body.id,
+      id: id,
     })
 
     if (cart) {
-      cart.count = req.body.count;
+      cart.count = count;
       await cartRepo.save(cart);
     }
 

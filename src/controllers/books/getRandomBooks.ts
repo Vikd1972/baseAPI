@@ -4,8 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { booksRepo } from "../../db";
 
 const getRandomBooks: Handler = async (req, res, next) => {
-  try {
-    
+  try {    
     const quantityBooks = await booksRepo.count()
     
     const randomBooks: number[] = []
