@@ -24,9 +24,9 @@ const genres = [
 
 (async () => {
   await connect();
-
+  
   for (let i = 0; i < genres.length; i++) {
-    const genre = genreRepo.create({ name: genres[i] });
-    await genreRepo.save(genre);
-  }
+      const genre = genreRepo.create({ name: genres[i] });
+      await genreRepo.save(genre);
+    }
 })();

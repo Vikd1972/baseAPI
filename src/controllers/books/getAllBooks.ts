@@ -6,10 +6,15 @@ import Book from '../../db/entity/Book';
 import Genre from '../../db/entity/Genre';
 
 type RequestType = {
-  currentGenres: number[];
+  currentGenres: QueryOptionsType;
   pagination: number;
   currentPage: number;
 };
+
+type QueryOptionsType = {
+  currentGenres: number[],
+  price: number[],
+}
 
 type ServiceInfoType = {
   quantityBooks: number,
@@ -30,11 +35,12 @@ type ControllerType = RequestHandler<RequestType, ResponseType>;
 
 const getBooks: ControllerType = async (req, res, next) => {
   try {
-    const { currentGenres, pagination } = req.body;
-    console.log('str1: ' + currentGenres);
-
+    // console.log(req.body);
+  
+    const { queryOptions, pagination } = req.body;    
+    
     let currentPage = req.body.currentPage;
-
+    
     const quantityBooks = await booksRepo.count();
     const quantityPages = Math.ceil(quantityBooks / pagination);
     if (currentPage < 1) {
@@ -43,23 +49,24 @@ const getBooks: ControllerType = async (req, res, next) => {
       currentPage = quantityPages;
     };
     const skip = (pagination * currentPage) - pagination;
-
+    
     const filteredBooks = booksRepo.createQueryBuilder('book');
-    if (currentGenres.length !== 0) {
+    const currentGenres = queryOptions.currentGenres
+    // console.log(currentGenres);    
+
+    if (queryOptions.currentGenres.length !== 0) {
       console.log('str2: ' + currentGenres);
-      filteredBooks.innerJoinAndSelect('book.genres', 'genre', 'genre.id IN (:...ids)', {ids: currentGenres },);
-      // console.log(filteredBooks);
-      
+      filteredBooks.innerJoinAndSelect('book.genres', 'genre', 'genre.id IN (:...ids)', { ids: currentGenres},);
+      // console.log(filteredBooks);      
     }
-
+    
     const book = await filteredBooks
-      .take(pagination)
-      .skip(skip)
-      .getMany();
+    .take(pagination)
+    .skip(skip)
+    .getMany();    
 
-
-    console.log('str3: ' + currentGenres);
-    console.log(book);
+    // console.log(book);
+    console.log(queryOptions);
 
     const books = await booksRepo.find({
       relations: {
