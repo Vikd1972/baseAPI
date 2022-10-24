@@ -40,14 +40,14 @@ const getBooks: ControllerType = async (req, res, next) => {
     // console.log(req.body);
 
     // for (let i = 1; i <= 24; i++) {
-      const book = await booksRepo.findOneBy({
-        id: 22,
-      });
-      if (book) {
-        book.hardcoverPrice = 599;
-        book.paperbackPrice = 399;
-        await booksRepo.save(book)
-      }
+    const book = await booksRepo.findOneBy({
+      id: 22,
+    });
+    if (book) {
+      book.hardcoverPrice = 599;
+      book.paperbackPrice = 399;
+      await booksRepo.save(book)
+    }
 
     // }
 
@@ -57,7 +57,7 @@ const getBooks: ControllerType = async (req, res, next) => {
     const maxPrice: number = queryOptions.price[1] * 100;
     const sort: string = queryOptions.sort;
     const searchText: string = queryOptions.searchText;
-    
+
     let currentPage = req.body.currentPage;
 
     const quantityBooks = await booksRepo.count();
@@ -68,9 +68,10 @@ const getBooks: ControllerType = async (req, res, next) => {
       currentPage = quantityPages;
     };
     const skip = (pagination * currentPage) - pagination;
-
-    const filteredBooks = booksRepo.createQueryBuilder('book');
     const currentGenres = queryOptions.currentGenres
+
+    const filteredBooks = booksRepo
+      .createQueryBuilder('book')
 
     if (queryOptions.currentGenres.length !== 0) {
       filteredBooks.innerJoinAndSelect(
@@ -96,7 +97,7 @@ const getBooks: ControllerType = async (req, res, next) => {
         'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
         { maxPrice });
     }
-    
+
     switch (sort) {
       case 'Price':
         filteredBooks.orderBy('book.paperbackPrice', 'ASC');

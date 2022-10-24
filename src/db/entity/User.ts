@@ -31,7 +31,7 @@ export class User {
   @Column({ type: 'varchar', nullable: true, select: false })
   password?: string
 
-  @ManyToMany(() => Book, (Book) => Book.users, {
+  @ManyToMany(() => Book, (book) => book.users, {
     cascade: true,
     eager: true,
   })

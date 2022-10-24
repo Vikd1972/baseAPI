@@ -15,10 +15,11 @@ const authUser: Handler = async (req, res, next) => {
   try {    
     const { email, password } = req.body;
     const user = await usersRepo
-      .createQueryBuilder("user")
+      .createQueryBuilder("user")   
       .where("user.email = :email", { email: email })
       .addSelect("user.password")
-      .getOne()
+      .getOne();
+    
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
