@@ -14,6 +14,8 @@ type RequestType = {
 type QueryOptionsType = {
   currentGenres: number[],
   price: number[],
+  sort: string,
+  searhText: string
 }
 
 type ServiceInfoType = {
@@ -36,11 +38,28 @@ type ControllerType = RequestHandler<RequestType, ResponseType>;
 const getBooks: ControllerType = async (req, res, next) => {
   try {
     // console.log(req.body);
-  
-    const { queryOptions, pagination } = req.body;    
+
+    // for (let i = 1; i <= 24; i++) {
+      const book = await booksRepo.findOneBy({
+        id: 22,
+      });
+      if (book) {
+        book.hardcoverPrice = 599;
+        book.paperbackPrice = 399;
+        await booksRepo.save(book)
+      }
+
+    // }
+
+
+    const { queryOptions, pagination } = req.body;
+    const minPrice: number = queryOptions.price[0] * 100;
+    const maxPrice: number = queryOptions.price[1] * 100;
+    const sort: string = queryOptions.sort;
+    const searchText: string = queryOptions.searchText;
     
     let currentPage = req.body.currentPage;
-    
+
     const quantityBooks = await booksRepo.count();
     const quantityPages = Math.ceil(quantityBooks / pagination);
     if (currentPage < 1) {
@@ -49,32 +68,57 @@ const getBooks: ControllerType = async (req, res, next) => {
       currentPage = quantityPages;
     };
     const skip = (pagination * currentPage) - pagination;
-    
+
     const filteredBooks = booksRepo.createQueryBuilder('book');
     const currentGenres = queryOptions.currentGenres
-    // console.log(currentGenres);    
 
     if (queryOptions.currentGenres.length !== 0) {
-      console.log('str2: ' + currentGenres);
-      filteredBooks.innerJoinAndSelect('book.genres', 'genre', 'genre.id IN (:...ids)', { ids: currentGenres},);
-      // console.log(filteredBooks);      
+      filteredBooks.innerJoinAndSelect(
+        'book.genres', 'genre', 'genre.id IN (:...ids)',
+        { ids: currentGenres },);
+    }
+
+    if (searchText.length > 0) {
+      const searchTerm = `%${searchText}%`
+      filteredBooks.where(
+        'book.name ILIKE :searchTerm OR book.author ILIKE :searchTerm',
+        { searchTerm });
+    }
+
+    if (minPrice > 0) {
+      filteredBooks.where(
+        'book.paperbackPrice >= :minPrice OR book.hardcoverPrice >= :minPrice',
+        { minPrice });
+    }
+
+    if (maxPrice < 10000) {
+      filteredBooks.where(
+        'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
+        { maxPrice });
     }
     
-    const book = await filteredBooks
-    .take(pagination)
-    .skip(skip)
-    .getMany();    
+    switch (sort) {
+      case 'Price':
+        filteredBooks.orderBy('book.paperbackPrice', 'ASC');
+        break;
+      case 'Name':
+        filteredBooks.orderBy('book.name', 'ASC');
+        break;
+      case 'Author name':
+        filteredBooks.orderBy('book.author', 'ASC');
+        break;
+      case 'Rating':
+        filteredBooks.orderBy('book.name', 'ASC');
+        break;
+      case 'Date of ussue':
+        filteredBooks.orderBy('book.releasedAt', 'ASC');
+        break;
+    }
 
-    // console.log(book);
-    console.log(queryOptions);
-
-    const books = await booksRepo.find({
-      relations: {
-        genres: true
-      },
-      skip: skip,
-      take: pagination,
-    });
+    const books = await filteredBooks
+      .take(pagination)
+      .skip(skip)
+      .getMany();
 
     books.forEach((item) => {
       item.hardcoverPrice = item.hardcoverPrice / 100;
@@ -93,9 +137,9 @@ const getBooks: ControllerType = async (req, res, next) => {
     const genres = await genreRepo.find()
 
     return res.status(StatusCodes.OK).json({
-      genres,
+      books,
       serviceInfo,
-      books
+      genres,
     });
 
   } catch (err) {
