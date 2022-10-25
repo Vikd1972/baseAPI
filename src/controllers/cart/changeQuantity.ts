@@ -1,15 +1,32 @@
-import { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { cartRepo } from "../../db";
+import { cartRepo } from '../../db';
+import type Cart from '../../db/entity/Cart';
 
-const changeQuantity: Handler = async (req, res, next) => {
+type ParamsType = Record<string, never>;
+
+type BodyType = Record<string, never>;
+
+type RequestType = {
+  userId: number;
+  id: number;
+  count: number;
+};
+
+type ResponseType = {
+  userCart: Cart;
+};
+
+type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+
+const changeQuantity: ControllerType = async (req, res, next) => {
   try {
-    const {userId, id, count} = req.body;
+    const { userId, id, count } = req.body;
 
     const cart = await cartRepo.findOneBy({
-      id: id,
-    })
+      id,
+    });
 
     if (cart) {
       cart.count = count;
@@ -25,15 +42,14 @@ const changeQuantity: Handler = async (req, res, next) => {
           id: userId,
         },
       },
-    })
-
-    return res.status(StatusCodes.OK).json({
-      userCart
     });
 
+    return res.status(StatusCodes.OK).json({
+      userCart,
+    });
   } catch (err) {
-    next(err)
-  };
+    next(err);
+  }
 };
 
 export default changeQuantity;

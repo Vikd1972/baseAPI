@@ -1,33 +1,40 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { ValidationError } from 'yup';
+import * as yup from 'yup';
 
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
-import ErrObj from '../customError/validationError';
+import type { SchemaItemType, SchemaType } from '../validation/querySchemaType';
 
-const validate = (schema: any) => async (req: Request, res: Response, next: NextFunction) => {      
+type ErrObjType = {
+  field?: string;
+  value: string;
+  message: string;
+}[];
+
+const validate = (schema: SchemaType): Handler => async (req, res, next) => {
   try {
-    await schema.validate(req.body, { abortEarly: false });
+    const currentSchema = yup.object().shape(
+      Object.entries(schema).reduce((acc, [key, value]) => {
+        return {
+          ...acc,
+          [key]: yup.object().shape(value),
+        };
+      }, {} as Record<string, yup.ObjectSchema<SchemaItemType>>),
+    );
+
+    await currentSchema.validate(req.body, { abortEarly: false });
     return next();
-
   } catch (err) {
-    const validationError: ErrObj = []; 
-
-    if (!(err instanceof ValidationError)) {
-      next();
+    if (err instanceof ValidationError) {
+      const validationError: ErrObjType = [];
+      return next(
+        customError(StatusCodes.PRECONDITION_FAILED, nameError.validationError, validationError),
+      );
     }
-
-    err.inner.forEach(element => {
-      validationError.push({
-        field: element.path,
-        value: element.value,
-        message: element.errors[0],
-      });
-    })
-    next (customError(StatusCodes.PRECONDITION_FAILED, nameError.validationError, validationError))
-    
+    return next(err);
   }
 };
 
-export default validate
+export default validate;

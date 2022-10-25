@@ -1,18 +1,28 @@
-interface CustomError extends Error {
-  localData: {
-    status: number;
-    message: string;
-    payload: any;
+// interface CustomError extends Error {
+//   localData: {
+//     status: number;
+//     message: string;
+//     payload: any;
+//   }
+// }
+
+type ErrorPayloadType<P> = {
+  status: number;
+  message: string;
+  payload: P;
+};
+
+class CustomError<P> extends Error {
+  localData: ErrorPayloadType<P>;
+
+  constructor(data: ErrorPayloadType<P>) {
+    super('Custom error');
+    this.localData = data;
   }
 }
 
-const customError = (status: number, message: string, payload: any) => {
-  const error = new Error(message) as CustomError;
-  error.localData = {
-    status,
-    message,
-    payload,
-  };
+const customError = <P = object>(status: number, message: string, payload: P) => {
+  const error = new CustomError({ status, message, payload });
   return error;
 };
 

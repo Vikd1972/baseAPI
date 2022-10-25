@@ -1,9 +1,10 @@
-import { object, string, date, SchemaOf } from 'yup';
-import { QuerySchemaLogin } from './querySchemaType';
+import type { SchemaOf } from 'yup';
+import { object, string } from 'yup';
+import type { QuerySchemaLoginType } from './querySchemaType';
 
-const querySchemaLogin: SchemaOf<QuerySchemaLogin> = object({     
+const querySchemaLogin: SchemaOf<QuerySchemaLoginType> = object({
   email: string().email('must be a valid email').required('Required Email'),
   password: string().required('Required Password'),
 });
 
-export default querySchemaLogin
+export default querySchemaLogin;

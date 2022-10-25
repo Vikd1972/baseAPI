@@ -1,9 +1,24 @@
-import { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { cartRepo } from "../../db";
+import { cartRepo } from '../../db';
+import type Cart from '../../db/entity/Cart';
 
-const getCart: Handler = async (req, res, next) => {
+type ParamsType = Record<string, never>;
+
+type BodyType = Record<string, never>;
+
+type RequestType = {
+  id: number;
+};
+
+type ResponseType = {
+  userCart: Cart;
+};
+
+type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+
+const getCart: ControllerType = async (req, res, next) => {
   try {
     const id = req.body.id;
 
@@ -13,18 +28,17 @@ const getCart: Handler = async (req, res, next) => {
       },
       where: {
         user: {
-          id: id,
+          id,
         },
       },
-    })
+    });
 
     return res.status(StatusCodes.OK).json(
-      userCart
+      userCart,
     );
-
   } catch (err) {
-    next(err)
-  };
+    next(err);
+  }
 };
 
 export default getCart;

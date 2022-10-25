@@ -1,12 +1,27 @@
-import { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Cart from '../../db/entity/Cart';
 
-import { booksRepo, usersRepo, cartRepo } from "../../db";
+import { booksRepo, usersRepo, cartRepo } from '../../db';
 
-const addBookToCart: Handler = async (req, res, next) => {
+type ParamsType = Record<string, never>;
+
+type BodyType = Record<string, never>;
+
+type RequestType = {
+  userId: number;
+  bookId: number;
+};
+
+type ResponseType = {
+  userCart: Cart;
+};
+
+type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+
+const addBookToCart: ControllerType = async (req, res, next) => {
   try {
-    const {userId, bookId} = req.body;
+    const { userId, bookId } = req.body;
 
     const cart = await cartRepo.find({
       where: {
@@ -17,37 +32,36 @@ const addBookToCart: Handler = async (req, res, next) => {
           id: userId,
         },
       },
-    })  
-    
-    if (cart.length == 0) {
-      
+    });
+
+    if (cart.length === 0) {
       const newCart = new Cart();
-  
+
       const book = await booksRepo.findOne({
         relations: {
-          cart: true
+          cart: true,
         },
         where: {
-          id: bookId
-        }
+          id: bookId,
+        },
       });
-  
+
       const user = await usersRepo.findOne({
         relations: {
-          cart: true
+          cart: true,
         },
         where: {
-          id: userId
-        }
-      });    
-      
+          id: userId,
+        },
+      });
+
       newCart.count = 1;
       if (user) newCart.user = user;
-      if (book) newCart.book = book;    
-      
+      if (book) newCart.book = book;
+
       await cartRepo.save(newCart);
     }
-    
+
     const userCart = await cartRepo.find({
       relations: {
         book: true,
@@ -57,15 +71,14 @@ const addBookToCart: Handler = async (req, res, next) => {
           id: userId,
         },
       },
-    })    
-
-    return res.status(StatusCodes.OK).json({
-      userCart
     });
 
+    return res.status(StatusCodes.OK).json({
+      userCart,
+    });
   } catch (err) {
-    next(err)
-  };
+    next(err);
+  }
 };
 
 export default addBookToCart;

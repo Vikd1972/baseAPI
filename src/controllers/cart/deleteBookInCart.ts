@@ -1,20 +1,36 @@
-import { Handler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import {cartRepo} from "../../db";
+import { cartRepo } from '../../db';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
+import type Cart from '../../db/entity/Cart';
 
-const deleteBookInCart: Handler = async (req, res, next) => {  
-  try {    
-    const {id, userId} = req.body;
-    
+type ParamsType = Record<string, never>;
+
+type BodyType = Record<string, never>;
+
+type RequestType = {
+  userId: number;
+  id: number;
+};
+
+type ResponseType = {
+  userCart: Cart;
+};
+
+type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+
+const deleteBookInCart: ControllerType = async (req, res, next) => {
+  try {
+    const { id, userId } = req.body;
+
     const bookInCart = await cartRepo.find({
       where: {
         user: {
           id: userId,
         },
-        id: id,
+        id,
       },
     });
 
@@ -33,15 +49,14 @@ const deleteBookInCart: Handler = async (req, res, next) => {
           id: userId,
         },
       },
-    })
+    });
 
     return res.status(StatusCodes.OK).json({
-      userCart
+      userCart,
     });
-    
   } catch (err) {
-    next(err)
-  };
+    next(err);
+  }
 };
 
 export default deleteBookInCart;

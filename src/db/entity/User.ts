@@ -5,44 +5,42 @@ import {
   JoinColumn,
   JoinTable,
   OneToMany,
-  Column
-} from "typeorm"
+  Column,
+} from 'typeorm';
 
-import Book from "./Book"
-import Assessment from "./Assessment"
-import Cart from "./Cart"
-
+import Book from './Book';
+import Assessment from './Assessment';
+import Cart from './Cart';
 
 @Entity()
 export class User {
-
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column({ nullable: true })
-  fullname: string
+  fullname: string;
 
-  @Column({ nullable: false })
-  email: string
+  @Column({ nullable: false, unique: true })
+  email: string;
 
   @Column({ nullable: true })
-  photoFilePath: string
+  photoFilePath: string;
 
   @Column({ type: 'varchar', nullable: true, select: false })
-  password?: string
+  password?: string;
 
   @ManyToMany(() => Book, (book) => book.users, {
     cascade: true,
     eager: true,
   })
-  favorites: Book[]
+  favorites?: Book[];
 
   @OneToMany(() => Assessment, (Assessment) => Assessment.user, {
     cascade: true,
     eager: true,
   })
-  @JoinTable()
-  assessment: Assessment[]
+  @JoinColumn()
+  assessment: Assessment[];
 
   @OneToMany(() => Cart, (Cart) => Cart.user, {
     cascade: true,
@@ -52,4 +50,4 @@ export class User {
   cart: Cart[];
 }
 
-export default User
+export default User;

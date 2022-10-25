@@ -1,16 +1,28 @@
-require('dotenv').config();
-interface Config {
-  port?: number,
-  host?: string,
-  user?: string,
-  base?: string,
-  pass?: string,
-  salt?: string,
-  secretWord?: string,
-  path?: string,
-}
+import 'reflect-metadata';
+import dotenv from 'dotenv';
+import path from 'path';
 
-const config: Config = {
+const localEnv = dotenv.parse(path.normalize(`${__dirname}/../.env`));
+const defaultEnv = dotenv.parse(path.normalize(`${__dirname}/../default.env`));
+
+const joinedEnv = {
+  ...defaultEnv,
+  ...localEnv,
+};
+
+const config2 = {
+  port: +joinedEnv.PORT,
+  db: {
+    port: +joinedEnv.DB_PORT,
+  },
+  token: {
+    secret: joinedEnv.TOKEN_SECRET,
+  },
+};
+
+dotenv.config();
+
+const config = {
   port: +(process.env.PORT ?? 4000),
   host: process.env.HOST,
   user: process.env.DB_USERNAME,

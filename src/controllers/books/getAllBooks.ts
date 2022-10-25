@@ -1,62 +1,60 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo, genreRepo } from "../../db";
-import Book from '../../db/entity/Book';
-import Genre from '../../db/entity/Genre';
+import { booksRepo, genreRepo } from '../../db';
+import type Book from '../../db/entity/Book';
+import type Genre from '../../db/entity/Genre';
+
+type ParamsType = Record<string, never>;
+
+type BodyType = Record<string, never>;
 
 type RequestType = {
-  currentGenres: QueryOptionsType;
+  queryOptions: QueryOptionsType;
   pagination: number;
   currentPage: number;
 };
 
 type QueryOptionsType = {
-  currentGenres: number[],
-  price: number[],
-  sort: string,
-  searhText: string
-}
+  currentGenres: number[];
+  price: number[];
+  sort: string;
+  searchText: string;
+};
 
 type ServiceInfoType = {
-  quantityBooks: number,
-  quantityPages: number,
-  activePage: number,
-  prevPage: number,
-  nextPage: number,
-  booksPerPage: number,
-}
+  quantityBooks: number;
+  quantityPages: number;
+  activePage: number;
+  prevPage: number;
+  nextPage: number;
+  booksPerPage: number;
+};
 
 type ResponseType = {
   books: Book[];
-  genres: Genre[]
+  genres: Genre[];
   serviceInfo: ServiceInfoType;
 };
 
-type ControllerType = RequestHandler<RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
 
 const getBooks: ControllerType = async (req, res, next) => {
   try {
-    // console.log(req.body);
-
-    // for (let i = 1; i <= 24; i++) {
     const book = await booksRepo.findOneBy({
       id: 22,
     });
     if (book) {
       book.hardcoverPrice = 599;
       book.paperbackPrice = 399;
-      await booksRepo.save(book)
+      await booksRepo.save(book);
     }
 
-    // }
-
-
     const { queryOptions, pagination } = req.body;
-    const minPrice: number = queryOptions.price[0] * 100;
-    const maxPrice: number = queryOptions.price[1] * 100;
-    const sort: string = queryOptions.sort;
-    const searchText: string = queryOptions.searchText;
+    const minPrice = queryOptions.price[0] * 100;
+    const maxPrice = queryOptions.price[1] * 100;
+    const sort = queryOptions.sort;
+    const searchText = queryOptions.searchText;
 
     let currentPage = req.body.currentPage;
 
@@ -66,54 +64,59 @@ const getBooks: ControllerType = async (req, res, next) => {
       currentPage = 1;
     } else if (currentPage > quantityPages) {
       currentPage = quantityPages;
-    };
+    }
     const skip = (pagination * currentPage) - pagination;
-    const currentGenres = queryOptions.currentGenres
+    const currentGenres = queryOptions.currentGenres;
 
     const filteredBooks = booksRepo
-      .createQueryBuilder('book')
+      .createQueryBuilder('book');
 
     if (queryOptions.currentGenres.length !== 0) {
       filteredBooks.innerJoinAndSelect(
-        'book.genres', 'genre', 'genre.id IN (:...ids)',
-        { ids: currentGenres },);
+        'book.genres', 'genre', 'genre.id IN (:...ids)', { ids: currentGenres },
+      );
     }
 
     if (searchText.length > 0) {
-      const searchTerm = `%${searchText}%`
+      const searchTerm = `%${searchText}%`;
       filteredBooks.where(
         'book.name ILIKE :searchTerm OR book.author ILIKE :searchTerm',
-        { searchTerm });
+        { searchTerm },
+      );
     }
 
     if (minPrice > 0) {
       filteredBooks.where(
         'book.paperbackPrice >= :minPrice OR book.hardcoverPrice >= :minPrice',
-        { minPrice });
+        { minPrice },
+      );
     }
 
     if (maxPrice < 10000) {
       filteredBooks.where(
         'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
-        { maxPrice });
+        { maxPrice },
+      );
     }
 
     switch (sort) {
-      case 'Price':
-        filteredBooks.orderBy('book.paperbackPrice', 'ASC');
-        break;
-      case 'Name':
-        filteredBooks.orderBy('book.name', 'ASC');
-        break;
-      case 'Author name':
-        filteredBooks.orderBy('book.author', 'ASC');
-        break;
-      case 'Rating':
-        filteredBooks.orderBy('book.name', 'ASC');
-        break;
-      case 'Date of ussue':
-        filteredBooks.orderBy('book.releasedAt', 'ASC');
-        break;
+    case 'Price':
+      filteredBooks.orderBy('book.paperbackPrice', 'ASC');
+      break;
+    case 'Name':
+      filteredBooks.orderBy('book.name', 'ASC');
+      break;
+    case 'Author name':
+      filteredBooks.orderBy('book.author', 'ASC');
+      break;
+    case 'Rating':
+      filteredBooks.orderBy('book.name', 'ASC');
+      break;
+    case 'Date of ussue':
+      filteredBooks.orderBy('book.releasedAt', 'ASC');
+      break;
+    default:
+      console.log('Нет таких значений');
     }
 
     const books = await filteredBooks
@@ -121,31 +124,30 @@ const getBooks: ControllerType = async (req, res, next) => {
       .skip(skip)
       .getMany();
 
-    books.forEach((item) => {
-      item.hardcoverPrice = item.hardcoverPrice / 100;
-      item.paperbackPrice = item.paperbackPrice / 100;
-    })
+    books.forEach((book) => {
+      book.hardcoverPrice /= 100;
+      book.paperbackPrice /= 100;
+    });
 
     const serviceInfo = {
-      quantityBooks: quantityBooks,
-      quantityPages: quantityPages,
+      quantityBooks,
+      quantityPages,
       activePage: currentPage,
-      prevPage: currentPage == 1 ? 1 : currentPage - 1,
-      nextPage: currentPage == quantityPages ? currentPage : currentPage + 1,
+      prevPage: currentPage === 1 ? 1 : currentPage - 1,
+      nextPage: currentPage === quantityPages ? currentPage : currentPage + 1,
       booksPerPage: pagination,
     };
 
-    const genres = await genreRepo.find()
+    const genres = await genreRepo.find();
 
     return res.status(StatusCodes.OK).json({
       books,
       serviceInfo,
       genres,
     });
-
   } catch (err) {
-    next(err)
-  };
+    next(err);
+  }
 };
 
 export default getBooks;

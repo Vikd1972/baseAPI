@@ -3,8 +3,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import Book from './Book';
@@ -15,10 +13,10 @@ export class Genre {
   id: number;
 
   @Column({ nullable: true })
-  name: string
+  name: string;
 
   @ManyToMany(() => Book, (book) => book.genres)
   books: Genre[];
 }
 
-export default Genre
+export default Genre;

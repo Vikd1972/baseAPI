@@ -1,11 +1,10 @@
-import "reflect-metadata"
-import { DataSource, DataSourceOptions } from "typeorm"
-import { SeederOptions } from 'typeorm-extension';
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
 
-import config from "../config"
+import config from '../config';
 
 const AppDataSource = new DataSource({
-  type: "postgres",
+  type: 'postgres',
   host: config.host,
   port: config.port,
   username: config.user,
@@ -13,13 +12,13 @@ const AppDataSource = new DataSource({
   database: config.base,
   synchronize: true,
   logging: false,
-    entities: [__dirname + '/entity/*'], 
-    migrations: [__dirname + '/migrations/*'],
+  entities: [`${__dirname}/entity/*`],
+  migrations: [`${__dirname}/migrations/*`],
   subscribers: [],
-})
+});
 
 export const connect = () => {
   return AppDataSource.initialize();
 };
 
-export default AppDataSource
+export default AppDataSource;

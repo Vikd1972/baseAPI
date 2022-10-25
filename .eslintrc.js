@@ -3,18 +3,38 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
-    jest: true
+    jest: true,
+    node: true,
   },
   extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended'],
   globals: {
     Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
+    SharedArrayBuffer: 'readonly',
   },
+
   parserOptions: {
     ecmaVersion: 2018,
-    project: ['./tsconfig.json', 'tsconfig.eslint.json']
+    project: [
+      './tsconfig.json',
+      'tsconfig.eslint.json',
+    ],
   },
   parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+      ],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
+  ],
+
   rules: {
     'eol-last': ['error', 'always'],
     'no-plusplus': 'off',
@@ -56,7 +76,7 @@ module.exports = {
       { selector: 'class', format: ['PascalCase'] },
       { selector: 'enum', format: ['PascalCase'], suffix: ['ENUM'] },
       { selector: 'interface', format: ['PascalCase'], prefix: ['I'] },
-      { selector: 'typeAlias', format: ['PascalCase'], suffix: ['Type'] }
+      { selector: 'typeAlias', format: ['PascalCase'], suffix: ['Type'] },
     ],
     '@typescript-eslint/await-thenable': 'error',
     indent: 'off',
@@ -64,10 +84,9 @@ module.exports = {
       ignoredNodes: [
         'FunctionExpression > .params[decorators.length > 0]',
         'FunctionExpression > .params > :matches(Decorator, :not(:first-child))',
-        'ClassBody.body > PropertyDefinition[decorators.length > 0] > .key'
-      ]
+        'ClassBody.body > PropertyDefinition[decorators.length > 0] > .key',
+      ],
     }],
-    '@typescript-eslint/consistent-type-imports': 'error'
-  }
+    '@typescript-eslint/consistent-type-imports': 'error',
+  },
 };
-Footer

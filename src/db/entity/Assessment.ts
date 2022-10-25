@@ -2,26 +2,22 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
-  Column
-} from "typeorm"
+  Column,
+} from 'typeorm';
 
-import Book from "./Book"
-import User from "./User"
+import Book from './Book';
+import User from './User';
 
 @Entity()
 export class Assessment {
-
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column({ nullable: true })
-  rating: number
+  comment: string;
 
   @Column({ nullable: true })
-  comment: string
-
-  @Column({ nullable: true })
-  commentData: Date
+  commentData: Date;
 
   @ManyToOne(() => Book, (Book) => Book.assessment, {
     nullable: false,
@@ -34,4 +30,4 @@ export class Assessment {
   user: User;
 }
 
-export default Assessment
+export default Assessment;

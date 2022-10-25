@@ -1,11 +1,19 @@
-interface QuerySchemaUser {
-  fullname?: string,
-  email?: string,
-  password?: string,
-}
-interface QuerySchemaLogin {
-  email: string,
-  password: string,
-}
+import type * as yup from 'yup';
 
-export { QuerySchemaUser, QuerySchemaLogin };
+export type QuerySchemaUserType = {
+  fullname?: string;
+  email?: string;
+  password?: string;
+};
+export type QuerySchemaLoginType = {
+  email: string;
+  password: string;
+};
+
+export type SchemaItemType = Record<string, yup.StringSchema | yup.NumberSchema | yup.DateSchema>;
+
+export type SchemaType = {
+  body?: SchemaItemType;
+  params?: SchemaItemType;
+  query?: SchemaItemType;
+};

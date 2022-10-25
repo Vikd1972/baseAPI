@@ -5,55 +5,55 @@ import {
   OneToMany,
   JoinTable,
   JoinColumn,
-  Column
-} from "typeorm"
+  Column,
+} from 'typeorm';
 
-import User from "./User"
-import Assessment from "./Assessment"
-import Genre from "./Genre"
-import Cart from "./Cart"
+import User from './User';
+import Assessment from './Assessment';
+import Genre from './Genre';
+import Cart from './Cart';
 
 @Entity()
 export class Book {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column({ nullable: true })
-  name: string
+  name: string;
 
   @Column({ nullable: true })
-  author: string
+  author: string;
 
   @Column({ nullable: true })
-  pathToCover: string
+  pathToCover: string;
 
   @Column({ nullable: true })
-  description: string
+  description: string;
 
   @Column({ nullable: true })
   releasedAt: Date;
 
   @Column({ nullable: true })
-  paperbackPrice: number
+  paperbackPrice: number;
 
   @Column({ nullable: true })
-  paperbackQuantity: number
+  paperbackQuantity: number;
 
   @Column({ nullable: true })
-  hardcoverPrice: number
+  hardcoverPrice: number;
 
   @Column({ nullable: true })
-  hardcoverQuantity: number
+  hardcoverQuantity: number;
 
   @Column({ nullable: true })
-  isNew: boolean
+  isNew: boolean;
 
   @Column({ nullable: true })
-  isBestseller: boolean
+  isBestseller: boolean;
 
   @ManyToMany(() => User, (user) => user.favorites)
   @JoinTable()
-  users: User[]
+  users: User[];
 
   @OneToMany(() => Assessment, (Assessment) => Assessment.book, {
     cascade: true,
@@ -77,4 +77,4 @@ export class Book {
   cart: Cart[];
 }
 
-export default Book
+export default Book;

@@ -4,26 +4,27 @@ import {
   ManyToOne,
   Column,
 } from 'typeorm';
+
 import Book from './Book';
 import User from './User';
 
 @Entity()
-export class Cart {
+export class Assessment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int' })
-  count: number;
+  @Column({ nullable: true })
+  rating: number;
 
-  @ManyToOne(() => Book, (book) => book.cart, {
+  @ManyToOne(() => Book, (Book) => Book.assessment, {
     nullable: false,
   })
   book: Book;
 
-  @ManyToOne(() => User, (user) => user.cart, {
+  @ManyToOne(() => User, (User) => User.assessment, {
     nullable: false,
   })
   user: User;
 }
 
-export default Cart;
+export default Assessment;
