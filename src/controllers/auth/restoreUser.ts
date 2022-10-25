@@ -17,8 +17,15 @@ const restoreUser: Handler = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload
-    const user = await usersRepo.findOneBy({      
-      id: decoded.id,
+    const user = await usersRepo.findOne({   
+      relations: {
+        cart: true,
+        assessment: true,
+        favorites: true,
+      },
+      where: {
+        id: decoded.id,
+      }
     })
 
     if (!user) {

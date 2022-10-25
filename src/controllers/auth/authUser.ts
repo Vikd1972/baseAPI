@@ -16,6 +16,7 @@ const authUser: Handler = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await usersRepo
       .createQueryBuilder("user")   
+      .leftJoinAndSelect("user.favorites", "favorite")
       .where("user.email = :email", { email: email })
       .addSelect("user.password")
       .getOne();

@@ -22,8 +22,15 @@ const signUpUser: Handler = async (req, res, next) => {
     
     await usersRepo.save(newUser);
 
-    const user = await usersRepo.findOneBy({
-      email: email,
+    const user = await usersRepo.findOne({
+      relations: {
+        cart: true,
+        assessment: true,
+        favorites: true,
+      },
+      where: {
+        email: email,
+      }
     });
 
     if (!user) {
