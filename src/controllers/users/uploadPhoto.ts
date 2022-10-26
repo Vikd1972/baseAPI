@@ -25,7 +25,7 @@ type ResponseType = {
 
 type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
 
-const secretWord = config.secretWord;
+const secretWord = config.token.secretWord;
 
 const uploadUserPhoto: ControllerType = async (req, res, next) => {
   try {
@@ -36,7 +36,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
     const userId = decoded.id as number;
     const file = req.body.userPhoto;
     const [data, base64] = file.split(',');
-    const path = config.path;
+    const path = config.path || '';
     const fileName = `photo_${v4()}`;
     const fileExtension = data.slice(data.indexOf('/') + 1, data.indexOf(';'));
     const buffer = Buffer.from(base64, 'base64');

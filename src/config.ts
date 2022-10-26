@@ -10,27 +10,21 @@ const joinedEnv = {
   ...localEnv,
 };
 
-const config2 = {
+dotenv.config();
+const config = {
   port: +joinedEnv.PORT,
+  path: joinedEnv.LOCAL_PATH,
   db: {
     port: +joinedEnv.DB_PORT,
+    host: joinedEnv.HOST,
+    user: joinedEnv.DB_USERNAME,
+    base: joinedEnv.DB_BASENAME,
+    pass: joinedEnv.DB_PASS,
   },
   token: {
-    secret: joinedEnv.TOKEN_SECRET,
+    salt: joinedEnv.PASSWORD_SALT,
+    secretWord: joinedEnv.SECRET_WORD,
   },
-};
-
-dotenv.config();
-
-const config = {
-  port: +(process.env.PORT ?? 4000),
-  host: process.env.HOST,
-  user: process.env.DB_USERNAME,
-  base: process.env.DB_BASENAME,
-  pass: process.env.DB_PASS,
-  salt: process.env.PASSWORD_SALT,
-  secretWord: process.env.SECRET_WORD,
-  path: process.env.LOCAL_PATH,
 };
 
 export default config;

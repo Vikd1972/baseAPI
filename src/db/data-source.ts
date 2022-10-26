@@ -5,11 +5,11 @@ import config from '../config';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
-  host: config.host,
-  port: config.port,
-  username: config.user,
-  password: config.pass,
-  database: config.base,
+  host: config.db.host,
+  port: config.db.port,
+  username: config.db.user,
+  password: config.db.pass,
+  database: config.db.base,
   synchronize: true,
   logging: false,
   entities: [`${__dirname}/entity/*`],

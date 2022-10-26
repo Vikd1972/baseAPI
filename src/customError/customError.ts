@@ -1,11 +1,3 @@
-// interface CustomError extends Error {
-//   localData: {
-//     status: number;
-//     message: string;
-//     payload: any;
-//   }
-// }
-
 type ErrorPayloadType<P> = {
   status: number;
   message: string;

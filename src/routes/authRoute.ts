@@ -8,8 +8,9 @@ import signUpUser from '../controllers/auth/signUpUser';
 import restoreUser from '../controllers/auth/restoreUser';
 
 const authRoute = express.Router();
-authRoute.post('/login', validate(querySchemaLogin), authUser);
+
 authRoute.post('/sign', validate(querySchemaUser), signUpUser);
-authRoute.get('/token', restoreUser);
+authRoute.post('/', validate(querySchemaLogin), authUser);
+authRoute.get('/', restoreUser);
 
 export default authRoute;

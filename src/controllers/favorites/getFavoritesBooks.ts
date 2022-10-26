@@ -27,9 +27,9 @@ const getFavoritesBooks: ControllerType = async (req, res, next) => {
       .where('id IN (:...ids)', { ids: favoritesBooks })
       .getMany();
 
-    books.forEach((item) => {
-      item.hardcoverPrice /= 100;
-      item.paperbackPrice /= 100;
+    books.forEach((book) => {
+      Object.assign(0, { [book.hardcoverPrice]: book.hardcoverPrice / 100 });
+      Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
     });
 
     return res.status(StatusCodes.OK).json({

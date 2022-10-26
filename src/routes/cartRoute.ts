@@ -10,7 +10,7 @@ const cartRoute = express.Router();
 cartRoute.use(checkToken);
 
 cartRoute.post('/add', addBookToCart);
-cartRoute.post('/change', changeQuantity);
+cartRoute.patch('/change', changeQuantity);
 cartRoute.delete('/', deleteBookInCart);
 cartRoute.post('/', getCart);
 

@@ -25,7 +25,7 @@ type ResponseType = {
 
 type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
 
-const secretWord = config.secretWord;
+const secretWord = config.token.secretWord;
 
 const authUser: ControllerType = async (req, res, next) => {
   try {
@@ -41,7 +41,7 @@ const authUser: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
     }
 
-    const hash = createHmac('sha256', password).update(config.salt || '').digest('hex');
+    const hash = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
 
     if (user.password !== hash) {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);

@@ -27,7 +27,7 @@ type ResponseType = {
 
 type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
 
-const secretWord = config.secretWord;
+const secretWord = config.token.secretWord;
 
 const changeDataUser: ControllerType = async (req, res, next) => {
   try {
@@ -44,7 +44,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
       .addSelect('user.password')
       .getOne();
 
-    const hash = createHmac('sha256', oldPassword || '').update(config.salt || '').digest('hex');
+    const hash = createHmac('sha256', oldPassword || '').update(config.token.salt || '').digest('hex');
 
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
@@ -74,7 +74,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
       }
 
       if (oldPassword && newPassword === confirmPassword) {
-        user.password = createHmac('sha256', newPassword).update(config.salt || '').digest('hex');
+        user.password = createHmac('sha256', newPassword).update(config.token.salt || '').digest('hex');
       }
     }
 

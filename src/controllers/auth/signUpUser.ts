@@ -9,7 +9,7 @@ import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
-const secretWord = config.secretWord;
+const secretWord = config.token.secretWord;
 
 type ParamsType = Record<string, never>;
 
@@ -34,7 +34,7 @@ const signUpUser: ControllerType = async (req, res, next) => {
     const newUser = new User();
     newUser.fullname = fullname;
     newUser.email = email;
-    newUser.password = createHmac('sha256', password).update(config.salt || '').digest('hex');
+    newUser.password = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
 
     await usersRepo.save(newUser);
 

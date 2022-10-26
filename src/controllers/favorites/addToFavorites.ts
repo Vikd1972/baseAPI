@@ -36,13 +36,13 @@ const addToFavorites: ControllerType = async (req, res, next) => {
     });
 
     if (book && user) {
-      const bookIndex = user.favorites.findIndex((item) => bookId === item.id);
+      const bookIndex = user.favorites?.findIndex((item) => bookId === item.id);
 
-      if (bookIndex !== -1) {
-        user.favorites.splice(bookIndex, 1);
+      if (bookIndex && bookIndex !== -1) {
+        user.favorites?.splice(bookIndex, 1);
         await usersRepo.save(user);
       } else {
-        user.favorites.push(book);
+        user.favorites?.push(book);
         await usersRepo.save(user);
       }
     }
@@ -52,10 +52,11 @@ const addToFavorites: ControllerType = async (req, res, next) => {
         id: userId,
       },
     });
-
-    return res.status(StatusCodes.OK).json({
-      newUser,
-    });
+    if (newUser) {
+      return res.status(StatusCodes.OK).json({
+        newUser,
+      });
+    }
   } catch (err) {
     next(err);
   }

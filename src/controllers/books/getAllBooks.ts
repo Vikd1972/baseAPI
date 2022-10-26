@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import util from 'util';
 
 import { booksRepo, genreRepo } from '../../db';
 import type Book from '../../db/entity/Book';
@@ -39,17 +40,9 @@ type ResponseType = {
 
 type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 const getBooks: ControllerType = async (req, res, next) => {
   try {
-    const book = await booksRepo.findOneBy({
-      id: 22,
-    });
-    if (book) {
-      book.hardcoverPrice = 599;
-      book.paperbackPrice = 399;
-      await booksRepo.save(book);
-    }
-
     const { queryOptions, pagination } = req.body;
     const minPrice = queryOptions.price[0] * 100;
     const maxPrice = queryOptions.price[1] * 100;
@@ -99,6 +92,7 @@ const getBooks: ControllerType = async (req, res, next) => {
       );
     }
 
+    const message = util.format('no such values');
     switch (sort) {
     case 'Price':
       filteredBooks.orderBy('book.paperbackPrice', 'ASC');
@@ -116,7 +110,8 @@ const getBooks: ControllerType = async (req, res, next) => {
       filteredBooks.orderBy('book.releasedAt', 'ASC');
       break;
     default:
-      console.log('Нет таких значений');
+      // eslint-disable-next-line @typescript-eslint/indent, no-console
+        console.log(message);
     }
 
     const books = await filteredBooks
@@ -125,8 +120,8 @@ const getBooks: ControllerType = async (req, res, next) => {
       .getMany();
 
     books.forEach((book) => {
-      book.hardcoverPrice /= 100;
-      book.paperbackPrice /= 100;
+      Object.assign(0, { [book.hardcoverPrice]: book.hardcoverPrice / 100 });
+      Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
     });
 
     const serviceInfo = {
@@ -140,11 +135,7 @@ const getBooks: ControllerType = async (req, res, next) => {
 
     const genres = await genreRepo.find();
 
-    return res.status(StatusCodes.OK).json({
-      books,
-      serviceInfo,
-      genres,
-    });
+    res.json({ books, serviceInfo, genres});
   } catch (err) {
     next(err);
   }

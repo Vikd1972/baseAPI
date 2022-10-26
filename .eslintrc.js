@@ -88,5 +88,12 @@ module.exports = {
       ],
     }],
     '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        // eslint-disable-next-line quote-props
+        'checksVoidReturn': false,
+      },
+    ],
   },
 };

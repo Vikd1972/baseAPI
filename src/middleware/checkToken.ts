@@ -8,7 +8,7 @@ import config from '../config';
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
 
-const secretWord = config.secretWord;
+const secretWord = config.token.secretWord;
 
 export const checkToken: Handler =
   async (req: AuthInfoRequest, res: Response, next: NextFunction) => {
