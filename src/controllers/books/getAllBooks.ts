@@ -135,7 +135,11 @@ const getBooks: ControllerType = async (req, res, next) => {
 
     const genres = await genreRepo.find();
 
-    res.json({ books, serviceInfo, genres});
+    return res.status(StatusCodes.OK).format({
+      books,
+      serviceInfo,
+      genres,
+    });
   } catch (err) {
     next(err);
   }

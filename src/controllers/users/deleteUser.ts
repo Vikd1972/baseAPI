@@ -33,7 +33,7 @@ const deleteUser: ControllerType = async (req, res, next) => {
     }
 
     await usersRepo.remove(user);
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).format({
       message: 'user deleted',
       user,
     });

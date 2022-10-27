@@ -52,7 +52,7 @@ const signUpUser: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body);
     }
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).format({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });

@@ -13,7 +13,10 @@ module.exports = {
   },
 
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      jsx: false,
+    },
     project: [
       './tsconfig.json',
       'tsconfig.eslint.json',
@@ -30,6 +33,10 @@ module.exports = {
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
       ],
       parserOptions: {
+        ecmaVersion: 2020,
+        ecmaFeatures: {
+          jsx: false,
+        },
         project: ['./tsconfig.json'],
       },
     },

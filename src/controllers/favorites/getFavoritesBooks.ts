@@ -32,7 +32,7 @@ const getFavoritesBooks: ControllerType = async (req, res, next) => {
       Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
     });
 
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).format({
       books,
     });
   } catch (err) {

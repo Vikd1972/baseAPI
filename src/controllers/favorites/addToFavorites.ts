@@ -53,7 +53,7 @@ const addToFavorites: ControllerType = async (req, res, next) => {
       },
     });
     if (newUser) {
-      return res.status(StatusCodes.OK).json({
+      return res.status(StatusCodes.OK).format({
         newUser,
       });
     }

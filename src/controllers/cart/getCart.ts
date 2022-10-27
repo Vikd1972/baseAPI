@@ -33,7 +33,7 @@ const getCart: ControllerType = async (req, res, next) => {
       },
     });
 
-    return res.status(StatusCodes.OK).json(
+    return res.status(StatusCodes.OK).format(
       userCart,
     );
   } catch (err) {

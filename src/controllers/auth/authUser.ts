@@ -48,7 +48,7 @@ const authUser: ControllerType = async (req, res, next) => {
     }
 
     delete user.password;
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).format({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });

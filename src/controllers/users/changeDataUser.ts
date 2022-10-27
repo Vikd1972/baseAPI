@@ -81,7 +81,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
     await usersRepo.save(user);
 
     delete user.password;
-    return res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).format({
       user,
     });
   } catch (err) {
