@@ -12,7 +12,7 @@ type ResponseType = {
   books: Book[];
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, BodyType>;
 
 const getRandomBooks: ControllerType = async (req, res, next) => {
   try {
@@ -29,11 +29,13 @@ const getRandomBooks: ControllerType = async (req, res, next) => {
       .getMany();
 
     books.forEach((book) => {
-      Object.assign(0, { [book.hardcoverPrice]: book.hardcoverPrice / 100 });
-      Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
+      // eslint-disable-next-line no-param-reassign
+      book.hardcoverPrice /= 100;
+      // eslint-disable-next-line no-param-reassign
+      book.paperbackPrice /= 100;
     });
 
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       books,
     });
   } catch (err) {

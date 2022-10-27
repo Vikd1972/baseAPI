@@ -26,7 +26,7 @@ type ResponseType = {
   token: string;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const signUpUser: ControllerType = async (req, res, next) => {
   try {
@@ -52,7 +52,7 @@ const signUpUser: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body);
     }
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });

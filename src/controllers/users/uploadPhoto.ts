@@ -23,7 +23,7 @@ type ResponseType = {
   user: User;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const secretWord = config.token.secretWord;
 
@@ -36,7 +36,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
     const userId = decoded.id as number;
     const file = req.body.userPhoto;
     const [data, base64] = file.split(',');
-    const path = config.path || '';
+    const path = config.path || ''; // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call
     const fileName = `photo_${v4()}`;
     const fileExtension = data.slice(data.indexOf('/') + 1, data.indexOf(';'));
     const buffer = Buffer.from(base64, 'base64');
@@ -64,7 +64,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
     user.photoFilePath = `http://localhost:3001/uploads/${fileName}.${fileExtension}`;
     await usersRepo.save(user);
     delete user.password;
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       user,
     });
   } catch (err) {

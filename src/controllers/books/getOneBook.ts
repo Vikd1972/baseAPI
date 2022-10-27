@@ -18,7 +18,7 @@ type ResponseType = {
   book: Book;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const getDetailBook: ControllerType = async (req, res, next) => {
   try {
@@ -37,7 +37,7 @@ const getDetailBook: ControllerType = async (req, res, next) => {
       book.paperbackPrice /= 100;
     }
 
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       book,
     });
   } catch (err) {

@@ -23,12 +23,14 @@ type ResponseType = {
   token: string;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const secretWord = config.token.secretWord;
 
 const authUser: ControllerType = async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-console
+    console.log(req.body);
     const { email, password } = req.body;
     const user = await usersRepo
       .createQueryBuilder('user')
@@ -48,7 +50,7 @@ const authUser: ControllerType = async (req, res, next) => {
     }
 
     delete user.password;
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });

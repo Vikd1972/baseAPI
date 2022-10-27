@@ -15,11 +15,10 @@ type RequestType = {
 };
 
 type ResponseType = {
-  message: string;
-  user: User[];
+  users: User[];
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const getUsers: ControllerType = async (req, res, next) => {
   try {
@@ -49,7 +48,7 @@ const getUsers: ControllerType = async (req, res, next) => {
     if (users.length === 0) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, 'no users in the database');
     }
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       users,
     });
   } catch (err) {

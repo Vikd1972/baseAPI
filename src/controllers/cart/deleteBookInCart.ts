@@ -16,10 +16,10 @@ type RequestType = {
 };
 
 type ResponseType = {
-  userCart: Cart;
+  userCart: Cart[];
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const deleteBookInCart: ControllerType = async (req, res, next) => {
   try {
@@ -51,7 +51,7 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
       },
     });
 
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       userCart,
     });
   } catch (err) {

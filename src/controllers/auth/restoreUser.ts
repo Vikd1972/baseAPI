@@ -18,7 +18,7 @@ type ResponseType = {
   user: User;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, BodyType>;
 
 const restoreUser: ControllerType = async (req, res, next) => {
   try {
@@ -43,7 +43,7 @@ const restoreUser: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       user,
     });
   } catch (err) {

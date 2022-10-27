@@ -1,9 +1,11 @@
-import { object, string } from 'yup';
+import * as yup from 'yup';
 
-const querySchemaUser = object({
-  fullname: string().matches(/^$|\w{3,}/, 'must be at least 3 characters long'),
-  email: string().email('must be a valid email'),
-  password: string().matches(/^$|\w{3,}/, 'must be at least 3 characters long'),
-});
+const querySchemaUser = {
+  body: {
+    fullname: yup.string().matches(/^$|\w{3,}/, 'must be at least 3 characters long'),
+    email: yup.string().email('must be a valid email'),
+    password: yup.string().matches(/^$|\w{3,}/, 'must be at least 3 characters long'),
+  },
+};
 
 export default querySchemaUser;

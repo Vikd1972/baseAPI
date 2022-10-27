@@ -10,6 +10,7 @@ module.exports = {
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
+    Promise: 'off',
   },
 
   parserOptions: {
@@ -18,8 +19,7 @@ module.exports = {
       jsx: false,
     },
     project: [
-      './tsconfig.json',
-      'tsconfig.eslint.json',
+      './tsconfig.json', 'tsconfig.eslint.json',
     ],
   },
   parser: '@typescript-eslint/parser',

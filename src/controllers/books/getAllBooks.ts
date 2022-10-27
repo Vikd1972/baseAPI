@@ -1,6 +1,5 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import util from 'util';
 
 import { booksRepo, genreRepo } from '../../db';
 import type Book from '../../db/entity/Book';
@@ -38,7 +37,7 @@ type ResponseType = {
   serviceInfo: ServiceInfoType;
 };
 
-type ControllerType = RequestHandler<ParamsType, BodyType, RequestType, ResponseType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 const getBooks: ControllerType = async (req, res, next) => {
@@ -92,7 +91,6 @@ const getBooks: ControllerType = async (req, res, next) => {
       );
     }
 
-    const message = util.format('no such values');
     switch (sort) {
     case 'Price':
       filteredBooks.orderBy('book.paperbackPrice', 'ASC');
@@ -111,7 +109,7 @@ const getBooks: ControllerType = async (req, res, next) => {
       break;
     default:
       // eslint-disable-next-line @typescript-eslint/indent, no-console
-        console.log(message);
+      // console.log('no such values');
     }
 
     const books = await filteredBooks
@@ -120,8 +118,10 @@ const getBooks: ControllerType = async (req, res, next) => {
       .getMany();
 
     books.forEach((book) => {
-      Object.assign(0, { [book.hardcoverPrice]: book.hardcoverPrice / 100 });
-      Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
+      // eslint-disable-next-line no-param-reassign
+      book.hardcoverPrice /= 100;
+      // eslint-disable-next-line no-param-reassign
+      book.paperbackPrice /= 100;
     });
 
     const serviceInfo = {
@@ -135,7 +135,7 @@ const getBooks: ControllerType = async (req, res, next) => {
 
     const genres = await genreRepo.find();
 
-    return res.status(StatusCodes.OK).format({
+    return res.status(StatusCodes.OK).json({
       books,
       serviceInfo,
       genres,

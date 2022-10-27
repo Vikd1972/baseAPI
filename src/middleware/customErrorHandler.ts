@@ -2,9 +2,10 @@ import type { ErrorRequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import customError from '../customError/customError';
 
-const customErrorHandler: ErrorRequestHandler = (err, req, res) => {
+const customErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof customError) {
-    return res.json(err);
+    return res
+      .json(err);
   }
 
   return res
