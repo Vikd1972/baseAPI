@@ -60,10 +60,11 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
         if (err) console.error(err);
       }));
     }
-
-    user.photoFilePath = `http://localhost:3001/uploads/${fileName}.${fileExtension}`;
+    user.photoFilePath = `${fileName}.${fileExtension}`;
     await usersRepo.save(user);
+
     delete user.password;
+    user.photoFilePath = `http://localhost:4001/uploads/${fileName}.${fileExtension}`;
     return res.status(StatusCodes.OK).json({
       user,
     });

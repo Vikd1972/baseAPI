@@ -31,7 +31,7 @@ const getUsers: ControllerType = async (req, res, next) => {
       if (!user) {
         throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
       }
-      user.photoFilePath = `http://localhost:3001/uploads/${user.photoFilePath}`;
+      user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
 
       return res.status(StatusCodes.OK).format({
         user,

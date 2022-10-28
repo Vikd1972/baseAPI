@@ -50,6 +50,7 @@ const authUser: ControllerType = async (req, res, next) => {
     }
 
     delete user.password;
+    user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
     return res.status(StatusCodes.OK).json({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),

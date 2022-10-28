@@ -28,8 +28,12 @@ const getFavoritesBooks: ControllerType = async (req, res, next) => {
       .getMany();
 
     books.forEach((book) => {
-      Object.assign(0, { [book.hardcoverPrice]: book.hardcoverPrice / 100 });
-      Object.assign(0, { [book.paperbackPrice]: book.paperbackPrice / 100 });
+      // eslint-disable-next-line no-param-reassign
+      book.hardcoverPrice /= 100;
+      // eslint-disable-next-line no-param-reassign
+      book.paperbackPrice /= 100;
+      // eslint-disable-next-line no-param-reassign
+      book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
     });
 
     return res.status(StatusCodes.OK).json({

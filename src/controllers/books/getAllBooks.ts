@@ -108,7 +108,6 @@ const getBooks: ControllerType = async (req, res, next) => {
       filteredBooks.orderBy('book.releasedAt', 'ASC');
       break;
     default:
-      // eslint-disable-next-line @typescript-eslint/indent, no-console
       // console.log('no such values');
     }
 
@@ -122,6 +121,8 @@ const getBooks: ControllerType = async (req, res, next) => {
       book.hardcoverPrice /= 100;
       // eslint-disable-next-line no-param-reassign
       book.paperbackPrice /= 100;
+      // eslint-disable-next-line no-param-reassign
+      book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
     });
 
     const serviceInfo = {

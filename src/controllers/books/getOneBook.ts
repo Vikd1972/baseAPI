@@ -35,6 +35,7 @@ const getDetailBook: ControllerType = async (req, res, next) => {
     if (book) {
       book.hardcoverPrice /= 100;
       book.paperbackPrice /= 100;
+      book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
     }
 
     return res.status(StatusCodes.OK).json({

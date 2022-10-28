@@ -81,6 +81,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
     await usersRepo.save(user);
 
     delete user.password;
+    user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
     return res.status(StatusCodes.OK).json({
       user,
     });
