@@ -8,19 +8,15 @@ type ParamsType = Record<string, never>;
 
 type BodyType = Record<string, never>;
 
-type RequestType = {
-  id: number;
-};
-
 type ResponseType = {
   userCart: Cart[];
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, BodyType>;
 
 const getCart: ControllerType = async (req, res, next) => {
   try {
-    const id = req.body.id;
+    const userId = req.user?.id;
 
     const userCart = await cartRepo.find({
       relations: {
@@ -28,7 +24,7 @@ const getCart: ControllerType = async (req, res, next) => {
       },
       where: {
         user: {
-          id,
+          id: userId,
         },
       },
     });

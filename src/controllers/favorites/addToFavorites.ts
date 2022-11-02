@@ -9,7 +9,6 @@ type ParamsType = Record<string, never>;
 type BodyType = Record<string, never>;
 
 type RequestType = {
-  userId: number;
   bookId: number;
 };
 
@@ -21,7 +20,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const addToFavorites: ControllerType = async (req, res, next) => {
   try {
-    const { userId, bookId } = req.body;
+    const bookId = req.body.bookId;
+    const userId = req.user?.id;
 
     const user = await usersRepo.findOne({
       where: {

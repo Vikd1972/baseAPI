@@ -8,6 +8,7 @@ import favoritesRoute from './routes/favoritesRoute';
 import usersRoute from './routes/usersRoute';
 import authRoute from './routes/authRoute';
 import customErrorHandler from './middleware/customErrorHandler';
+import './types';
 
 const app = express();
 

@@ -1,8 +1,7 @@
-import type { Response, NextFunction, Handler } from 'express';
+import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
 
-import type AuthInfoRequest from '../definitios/request';
 import { usersRepo } from '../db';
 import config from '../config';
 import customError from '../customError/customError';
@@ -11,7 +10,7 @@ import nameError from '../utils/utils';
 const secretWord = config.token.secretWord;
 
 export const checkToken: Handler =
-  async (req: AuthInfoRequest, res: Response, next: NextFunction) => {
+  async (req, res, next) => {
     try {
       if (!req.headers.authorization) {
         throw customError(
@@ -20,7 +19,7 @@ export const checkToken: Handler =
       }
 
       const decoded =
-      jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
+        jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
       const userId = decoded.id as number;
       const user = await usersRepo.findOneBy({
         id: userId,

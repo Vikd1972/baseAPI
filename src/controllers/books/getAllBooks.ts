@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -42,11 +43,12 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 const getBooks: ControllerType = async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-console
     const { queryOptions, pagination } = req.body;
-    const minPrice = queryOptions.price[0] * 100;
-    const maxPrice = queryOptions.price[1] * 100;
-    const sort = queryOptions.sort;
-    const searchText = queryOptions.searchText;
+    // const minPrice = queryOptions.price[0] * 100;
+    // const maxPrice = queryOptions.price[1] * 100;
+    // const sort = queryOptions.sort;
+    // const searchText = queryOptions.searchText;
 
     let currentPage = req.body.currentPage;
 
@@ -58,58 +60,58 @@ const getBooks: ControllerType = async (req, res, next) => {
       currentPage = quantityPages;
     }
     const skip = (pagination * currentPage) - pagination;
-    const currentGenres = queryOptions.currentGenres;
+    // const currentGenres = queryOptions.currentGenres;
 
     const filteredBooks = booksRepo
       .createQueryBuilder('book');
 
-    if (queryOptions.currentGenres.length !== 0) {
-      filteredBooks.innerJoinAndSelect(
-        'book.genres', 'genre', 'genre.id IN (:...ids)', { ids: currentGenres },
-      );
-    }
+    // if (queryOptions.currentGenres.length !== 0) {
+    //   filteredBooks.innerJoinAndSelect(
+    //     'book.genres', 'genre', 'genre.id IN (:...ids)', { ids: currentGenres },
+    //   );
+    // }
 
-    if (searchText.length > 0) {
-      const searchTerm = `%${searchText}%`;
-      filteredBooks.where(
-        'book.name ILIKE :searchTerm OR book.author ILIKE :searchTerm',
-        { searchTerm },
-      );
-    }
+    // if (searchText.length > 0) {
+    //   const searchTerm = `%${searchText}%`;
+    //   filteredBooks.where(
+    //     'book.name ILIKE :searchTerm OR book.author ILIKE :searchTerm',
+    //     { searchTerm },
+    //   );
+    // }
 
-    if (minPrice > 0) {
-      filteredBooks.where(
-        'book.paperbackPrice >= :minPrice OR book.hardcoverPrice >= :minPrice',
-        { minPrice },
-      );
-    }
+    // if (minPrice > 0) {
+    //   filteredBooks.where(
+    //     'book.paperbackPrice >= :minPrice OR book.hardcoverPrice >= :minPrice',
+    //     { minPrice },
+    //   );
+    // }
 
-    if (maxPrice < 10000) {
-      filteredBooks.where(
-        'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
-        { maxPrice },
-      );
-    }
+    // if (maxPrice < 10000) {
+    //   filteredBooks.where(
+    //     'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
+    //     { maxPrice },
+    //   );
+    // }
 
-    switch (sort) {
-    case 'Price':
-      filteredBooks.orderBy('book.paperbackPrice', 'ASC');
-      break;
-    case 'Name':
-      filteredBooks.orderBy('book.name', 'ASC');
-      break;
-    case 'Author name':
-      filteredBooks.orderBy('book.author', 'ASC');
-      break;
-    case 'Rating':
-      filteredBooks.orderBy('book.name', 'ASC');
-      break;
-    case 'Date of ussue':
-      filteredBooks.orderBy('book.releasedAt', 'ASC');
-      break;
-    default:
-      // console.log('no such values');
-    }
+    // switch (sort) {
+    //   case 'Price':
+    //     filteredBooks.orderBy('book.paperbackPrice', 'ASC');
+    //     break;
+    //   case 'Name':
+    //     filteredBooks.orderBy('book.name', 'ASC');
+    //     break;
+    //   case 'Author name':
+    //     filteredBooks.orderBy('book.author', 'ASC');
+    //     break;
+    //   case 'Rating':
+    //     filteredBooks.orderBy('book.name', 'ASC');
+    //     break;
+    //   case 'Date of ussue':
+    //     filteredBooks.orderBy('book.releasedAt', 'ASC');
+    //     break;
+    //   default:
+    //   // console.log('no such values');
+    // }
 
     const books = await filteredBooks
       .take(pagination)

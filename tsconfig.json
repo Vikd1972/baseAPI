@@ -16,8 +16,7 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
   },
-  "files":["./src/definitios/request.ts"],
   "include": [
-    "src"
+    "src",
   ]
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { Handler } from 'express';
 import * as yup from 'yup';
 import { StatusCodes } from 'http-status-codes';

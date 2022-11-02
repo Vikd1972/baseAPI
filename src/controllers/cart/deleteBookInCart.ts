@@ -11,7 +11,6 @@ type ParamsType = Record<string, never>;
 type BodyType = Record<string, never>;
 
 type RequestType = {
-  userId: number;
   id: number;
 };
 
@@ -23,7 +22,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const deleteBookInCart: ControllerType = async (req, res, next) => {
   try {
-    const { id, userId } = req.body;
+    const id = req.body.id;
+    const userId = req.user?.id;
 
     const bookInCart = await cartRepo.find({
       where: {

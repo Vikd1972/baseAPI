@@ -9,7 +9,6 @@ type ParamsType = Record<string, never>;
 type BodyType = Record<string, never>;
 
 type RequestType = {
-  userId: number;
   id: number;
   count: number;
 };
@@ -22,7 +21,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const changeQuantity: ControllerType = async (req, res, next) => {
   try {
-    const { userId, id, count } = req.body;
+    const { id, count } = req.body;
+    const userId = req.user?.id;
 
     const cart = await cartRepo.findOneBy({
       id,

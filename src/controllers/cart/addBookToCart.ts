@@ -6,10 +6,9 @@ import { booksRepo, usersRepo, cartRepo } from '../../db';
 
 type ParamsType = Record<string, never>;
 
-type BodyType = Record<string, never>;
+// type BodyType = Record<string, never>;
 
 type RequestType = {
-  userId: number;
   bookId: number;
 };
 
@@ -17,11 +16,12 @@ type ResponseType = {
   userCart: Cart[];
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unknown>;
 
 const addBookToCart: ControllerType = async (req, res, next) => {
   try {
-    const { userId, bookId } = req.body;
+    const bookId = req.body.bookId;
+    const userId = req.user?.id;
 
     const cart = await cartRepo.find({
       where: {
