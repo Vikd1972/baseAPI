@@ -6,8 +6,6 @@ import { booksRepo, usersRepo, cartRepo } from '../../db';
 
 type ParamsType = Record<string, never>;
 
-// type BodyType = Record<string, never>;
-
 type RequestType = {
   bookId: number;
 };

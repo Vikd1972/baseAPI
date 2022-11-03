@@ -3,14 +3,14 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinColumn,
-  JoinTable,
   OneToMany,
   Column,
 } from 'typeorm';
 
 import Book from './Book';
-import Assessment from './Assessment';
+import Comment from './Comment';
 import Cart from './Cart';
+import Rating from './Rating';
 
 @Entity()
 export class User {
@@ -35,19 +35,26 @@ export class User {
   })
   favorites?: Book[];
 
-  @OneToMany(() => Assessment, (Assessment) => Assessment.user, {
+  @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
     eager: true,
   })
   @JoinColumn()
-  assessment: Assessment[];
+  comment: Comment[];
 
   @OneToMany(() => Cart, (Cart) => Cart.user, {
     cascade: true,
     eager: true,
   })
-  @JoinTable()
+  @JoinColumn()
   cart: Cart[];
+
+  @OneToMany(() => Rating, (Rating) => Rating.user, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  rating: Rating[];
 }
 
 export default User;

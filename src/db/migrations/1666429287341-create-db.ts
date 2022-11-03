@@ -7,19 +7,26 @@ export class createDb1666429287341 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TABLE "user" (
+      CREATE TABLE "rating" (
         "id" SERIAL NOT NULL PRIMARY KEY,
-        "fullname" character varying,
-        "email" character varying,
-        "photoFilePath" character varying,
-        "password"  character varying,
+        "rating" integer,
+      )
+    `);
+    await queryRunner.query(`
+      CREATE TABLE "comment" (
+        "id" SERIAL NOT NULL PRIMARY KEY,
+        "comment" text,
+        "commentData" date,
       )
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      DROP TABLE "user"
+      DROP TABLE "comment"
+    `);
+    await queryRunner.query(`
+      DROP TABLE "rating"
     `);
   }
 }

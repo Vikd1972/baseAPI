@@ -9,9 +9,10 @@ import {
 } from 'typeorm';
 
 import User from './User';
-import Assessment from './Assessment';
+import Comment from './Comment';
 import Genre from './Genre';
 import Cart from './Cart';
+import Rating from './Rating';
 
 @Entity()
 export class Book {
@@ -55,13 +56,6 @@ export class Book {
   @JoinTable()
   users: User[];
 
-  @OneToMany(() => Assessment, (Assessment) => Assessment.book, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinTable()
-  assessment: Assessment[];
-
   @ManyToMany(() => Genre, (genre) => genre.id, {
     cascade: true,
     eager: true,
@@ -69,12 +63,26 @@ export class Book {
   @JoinTable()
   genres: Genre[];
 
+  @OneToMany(() => Comment, (Comment) => Comment.book, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  comment: Comment[];
+
   @OneToMany(() => Cart, (Cart) => Cart.book, {
     cascade: true,
     eager: true,
   })
   @JoinColumn()
   cart: Cart[];
+
+  @OneToMany(() => Rating, (Rating) => Rating.book, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  rating: Rating[];
 }
 
 export default Book;

@@ -29,8 +29,6 @@ const secretWord = config.token.secretWord;
 
 const authUser: ControllerType = async (req, res, next) => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(req.body);
     const { email, password } = req.body;
     const user = await usersRepo
       .createQueryBuilder('user')

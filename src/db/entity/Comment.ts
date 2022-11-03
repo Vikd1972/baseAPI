@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,7 +10,7 @@ import Book from './Book';
 import User from './User';
 
 @Entity()
-export class Assessment {
+export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,15 +20,15 @@ export class Assessment {
   @Column({ nullable: true })
   commentData: Date;
 
-  @ManyToOne(() => Book, (Book) => Book.assessment, {
+  @ManyToOne(() => Book, (book) => book.comment, {
     nullable: false,
   })
   book: Book;
 
-  @ManyToOne(() => User, (User) => User.assessment, {
+  @ManyToOne(() => User, (user) => user.comment, {
     nullable: false,
   })
   user: User;
 }
 
-export default Assessment;
+export default Comment;

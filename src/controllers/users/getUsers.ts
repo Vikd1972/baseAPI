@@ -41,8 +41,9 @@ const getUsers: ControllerType = async (req, res, next) => {
     const users = await usersRepo.find({
       relations: {
         cart: true,
-        assessment: true,
+        comment: true,
         favorites: true,
+        rating: true,
       },
     });
     if (users.length === 0) {

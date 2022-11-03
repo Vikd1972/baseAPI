@@ -3,9 +3,10 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo, genreRepo } from '../../db';
+import { booksRepo, genreRepo, ratingRepo } from '../../db';
 import type Book from '../../db/entity/Book';
 import type Genre from '../../db/entity/Genre';
+import type Rating from '../../db/entity/Rating';
 
 type ParamsType = Record<string, never>;
 
@@ -36,6 +37,7 @@ type ResponseType = {
   books: Book[];
   genres: Genre[];
   serviceInfo: ServiceInfoType;
+  rating: Rating[];
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType, BodyType>;
@@ -125,7 +127,6 @@ const getBooks: ControllerType = async (req, res, next) => {
         pathToCover: `http://localhost:4001/covers/${book.pathToCover}`,
       };
     });
-    console.log(books);
 
     const quantityBooks = filterBooks[1];
     const quantityPages = Math.ceil(quantityBooks / pagination);
@@ -146,10 +147,13 @@ const getBooks: ControllerType = async (req, res, next) => {
 
     const allGenres = await genreRepo.find();
 
+    const rating = await ratingRepo.find();
+
     return res.status(StatusCodes.OK).json({
       books,
       serviceInfo,
       genres: allGenres,
+      rating,
     });
   } catch (err) {
     next(err);
