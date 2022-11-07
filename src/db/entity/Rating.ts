@@ -14,7 +14,7 @@ export class Rating {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'real' })
   rating: number;
 
   @ManyToOne(() => Book, (Book) => Book.rating, {
