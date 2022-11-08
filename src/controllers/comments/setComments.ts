@@ -2,7 +2,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import Rating from '../../db/entity/Rating';
+import Comment from '../../db/entity/Comment';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
@@ -11,19 +11,19 @@ import db from '../../db';
 type ParamsType = Record<string, never>;
 
 type RequestType = {
-  onRating: number;
+  comments: string;
   bookId: number;
 };
 
 type ResponseType = {
-  averageRatingBook: number;
+  commentsOfBook: Comment[];
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unknown>;
 
-const setRating: ControllerType = async (req, res, next) => {
+const setComments: ControllerType = async (req, res, next) => {
   try {
-    const { onRating, bookId } = req.body;
+    const { comments, bookId } = req.body;
     const userId = req.user?.id;
 
     const book = await db.books.findOne({
@@ -46,31 +46,19 @@ const setRating: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.UNAUTHORIZED, nameError.userNotFound, nameError.userNotFound);
     }
 
-    const currentRating = await db.rating.findOne({
-      where: {
-        user: {
-          id: userId,
-        },
-        book: {
-          id: bookId,
-        },
+    const newComment = new Comment();
+
+    newComment.comment = comments;
+    newComment.commentData = new Date();
+    newComment.user = user;
+    newComment.book = book;
+
+    await db.comments.save(newComment);
+
+    const commentsOfBook = await db.comments.find({
+      relations: {
+        user: true,
       },
-    });
-
-    if (currentRating) {
-      currentRating.rating = onRating;
-      await db.rating.save(currentRating);
-    } else {
-      const newRating = new Rating();
-
-      newRating.rating = onRating;
-      newRating.user = user;
-      newRating.book = book;
-
-      await db.rating.save(newRating);
-    }
-
-    const ratingsOfBook = await db.rating.find({
       where: {
         book: {
           id: bookId,
@@ -78,23 +66,16 @@ const setRating: ControllerType = async (req, res, next) => {
       },
     });
 
-    if (!ratingsOfBook) {
-      return res.status(StatusCodes.OK).json({
-        averageRatingBook: 0,
-      });
+    if (!commentsOfBook) {
+      return res.status(StatusCodes.OK);
     }
-    const averageRatingBook = ratingsOfBook.reduce((sum, item) => sum + Number(item.rating), 0) /
-      ratingsOfBook.length;
-
-    book.averageRating = averageRatingBook;
-    await db.books.save(book);
 
     return res.status(StatusCodes.OK).json({
-      averageRatingBook,
+      commentsOfBook,
     });
   } catch (err) {
     next(err);
   }
 };
 
-export default setRating;
+export default setComments;

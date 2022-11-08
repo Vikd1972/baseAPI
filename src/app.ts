@@ -8,6 +8,7 @@ import favoritesRoute from './routes/favoritesRoute';
 import usersRoute from './routes/usersRoute';
 import authRoute from './routes/authRoute';
 import ratingRoute from './routes/ratingRoute';
+import commentsRoute from './routes/commentsRoute';
 import customErrorHandler from './middleware/customErrorHandler';
 import './types';
 
@@ -25,6 +26,7 @@ app.use('/api/cart', cartRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/rating', ratingRoute);
+app.use('/api/comments', commentsRoute);
 
 app.use(customErrorHandler);
 

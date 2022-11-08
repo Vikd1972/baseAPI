@@ -11,6 +11,6 @@ export default {
   users: AppDataSource.getRepository(User),
   books: AppDataSource.getRepository(Book),
   genre: AppDataSource.getRepository(Genre),
-  comment: AppDataSource.getRepository(Comment),
+  comments: AppDataSource.getRepository(Comment),
   rating: AppDataSource.getRepository(Rating),
 };
