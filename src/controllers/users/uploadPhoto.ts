@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { v4 } from 'uuid';
 import fs from 'fs';
 
-import { usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 import config from '../../config';
 import customError from '../../customError/customError';
@@ -47,7 +47,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
       }
     });
 
-    const user = await usersRepo.findOneBy({
+    const user = await db.users.findOneBy({
       id: userId,
     });
 
@@ -61,7 +61,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
       }));
     }
     user.photoFilePath = `${fileName}.${fileExtension}`;
-    await usersRepo.save(user);
+    await db.users.save(user);
 
     delete user.password;
     user.photoFilePath = `http://localhost:4001/uploads/${fileName}.${fileExtension}`;

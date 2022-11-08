@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo, usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 
 type ParamsType = Record<string, never>;
@@ -23,13 +23,13 @@ const addToFavorites: ControllerType = async (req, res, next) => {
     const bookId = req.body.bookId;
     const userId = req.user?.id;
 
-    const user = await usersRepo.findOne({
+    const user = await db.users.findOne({
       where: {
         id: userId,
       },
     });
 
-    const book = await booksRepo.findOne({
+    const book = await db.books.findOne({
       where: {
         id: bookId,
       },
@@ -40,14 +40,14 @@ const addToFavorites: ControllerType = async (req, res, next) => {
 
       if (bookIndex && bookIndex !== -1) {
         user.favorites?.splice(bookIndex, 1);
-        await usersRepo.save(user);
+        await db.users.save(user);
       } else {
         user.favorites?.push(book);
-        await usersRepo.save(user);
+        await db.users.save(user);
       }
     }
 
-    const newUser = await usersRepo.findOne({
+    const newUser = await db.users.findOne({
       where: {
         id: userId,
       },

@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { cartRepo } from '../../db';
+import db from '../../db';
 import type Cart from '../../db/entity/Cart';
 
 type ParamsType = Record<string, never>;
@@ -18,7 +18,7 @@ const getCart: ControllerType = async (req, res, next) => {
   try {
     const userId = req.user?.id;
 
-    const userCart = await cartRepo.find({
+    const userCart = await db.cart.find({
       relations: {
         book: true,
       },

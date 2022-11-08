@@ -2,7 +2,7 @@ import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
 
-import { usersRepo } from '../db';
+import db from '../db';
 import config from '../config';
 import customError from '../customError/customError';
 import nameError from '../utils/utils';
@@ -21,7 +21,7 @@ export const checkToken: Handler =
       const decoded =
         jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
       const userId = decoded.id as number;
-      const user = await usersRepo.findOneBy({
+      const user = await db.users.findOneBy({
         id: userId,
       });
 

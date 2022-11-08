@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { cartRepo } from '../../db';
+import db from '../../db';
 import type Cart from '../../db/entity/Cart';
 
 type ParamsType = Record<string, never>;
@@ -24,16 +24,16 @@ const changeQuantity: ControllerType = async (req, res, next) => {
     const { id, count } = req.body;
     const userId = req.user?.id;
 
-    const cart = await cartRepo.findOneBy({
+    const cart = await db.cart.findOneBy({
       id,
     });
 
     if (cart) {
       cart.count = count;
-      await cartRepo.save(cart);
+      await db.cart.save(cart);
     }
 
-    const userCart = await cartRepo.find({
+    const userCart = await db.cart.find({
       relations: {
         book: true,
       },

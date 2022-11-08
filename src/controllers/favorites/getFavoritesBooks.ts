@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo } from '../../db';
+import db from '../../db';
 import type Book from '../../db/entity/Book';
 
 type ParamsType = Record<string, never>;
@@ -22,7 +22,7 @@ const getFavoritesBooks: ControllerType = async (req, res, next) => {
   try {
     const favoritesBooks = req.body.favorites;
 
-    const books = await booksRepo
+    const books = await db.books
       .createQueryBuilder()
       .where('id IN (:...ids)', { ids: favoritesBooks })
       .getMany();

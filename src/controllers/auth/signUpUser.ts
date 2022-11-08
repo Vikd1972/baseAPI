@@ -4,7 +4,7 @@ import { createHmac } from 'crypto';
 import { StatusCodes } from 'http-status-codes';
 
 import User from '../../db/entity/User';
-import { usersRepo } from '../../db';
+import db from '../../db';
 import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -36,9 +36,9 @@ const signUpUser: ControllerType = async (req, res, next) => {
     newUser.email = email;
     newUser.password = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
 
-    await usersRepo.save(newUser);
+    await db.users.save(newUser);
 
-    const user = await usersRepo.findOne({
+    const user = await db.users.findOne({
       relations: {
         cart: true,
         comment: true,

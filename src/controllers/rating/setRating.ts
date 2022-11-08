@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Rating from '../../db/entity/Rating';
 
-import { booksRepo, usersRepo, ratingRepo } from '../../db';
+import Rating from '../../db/entity/Rating';
+import customError from '../../customError/customError';
+import nameError from '../../utils/utils';
+
+import db from '../../db';
 
 type ParamsType = Record<string, never>;
 
@@ -13,7 +16,7 @@ type RequestType = {
 };
 
 type ResponseType = {
-  myRating: Rating;
+  averageRatingBook: number;
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unknown>;
@@ -21,21 +24,29 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unkn
 const setRating: ControllerType = async (req, res, next) => {
   try {
     const { onRating, bookId } = req.body;
-
     const userId = req.user?.id;
-    const book = await booksRepo.findOne({
+
+    const book = await db.books.findOne({
       where: {
         id: bookId,
       },
     });
 
-    const user = await usersRepo.findOne({
+    if (!book) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.bookNotFound, nameError.bookNotFound);
+    }
+
+    const user = await db.users.findOne({
       where: {
         id: userId,
       },
     });
 
-    const rating = await ratingRepo.findOne({
+    if (!user) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.userNotFound, nameError.userNotFound);
+    }
+
+    const currentRating = await db.rating.findOne({
       where: {
         user: {
           id: userId,
@@ -46,60 +57,41 @@ const setRating: ControllerType = async (req, res, next) => {
       },
     });
 
-    if (!rating) {
+    if (currentRating) {
+      currentRating.rating = onRating;
+      await db.rating.save(currentRating);
+    } else {
       const newRating = new Rating();
 
       newRating.rating = onRating;
       if (user) newRating.user = user;
       if (book) newRating.book = book;
 
-      await ratingRepo.save(newRating);
-    } else {
-      rating.rating = onRating;
-      await ratingRepo.save(rating);
+      await db.rating.save(newRating);
     }
-    const ratingsOfBook = await ratingRepo.find({
+
+    const ratingsOfBook = await db.rating.find({
       where: {
         book: {
           id: bookId,
         },
       },
     });
-    // console.log(ratingsOfBook);
+
+    if (!ratingsOfBook) {
+      return res.status(StatusCodes.OK).json({
+        averageRatingBook: 0,
+      });
+    }
     const averageRatingBook = ratingsOfBook.reduce((sum, item) => sum + Number(item.rating), 0) /
       ratingsOfBook.length;
 
-    const myRating = await ratingRepo.findOne({
-      where: {
-        user: {
-          id: userId,
-        },
-        book: {
-          id: bookId,
-        },
-      },
+    book.averageRating = averageRatingBook;
+    await db.books.save(book);
+
+    return res.status(StatusCodes.OK).json({
+      averageRatingBook,
     });
-    console.log(myRating);
-    console.log(averageRatingBook);
-
-    if (book) {
-      // console.log(averageRatingBook, 'adsdasd');
-      book.averageRating = averageRatingBook;
-      await booksRepo.save(book);
-    }
-
-    const newBook = await booksRepo.findOne({
-      where: {
-        id: bookId,
-      },
-    });
-    console.log(newBook);
-
-    if (myRating) {
-      return res.status(StatusCodes.OK).json({
-        myRating,
-      });
-    }
   } catch (err) {
     next(err);
   }

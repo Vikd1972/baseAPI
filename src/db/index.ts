@@ -6,9 +6,11 @@ import Cart from './entity/Cart';
 import Comment from './entity/Comment';
 import Rating from './entity/Rating';
 
-export const cartRepo = AppDataSource.getRepository(Cart);
-export const usersRepo = AppDataSource.getRepository(User);
-export const booksRepo = AppDataSource.getRepository(Book);
-export const genreRepo = AppDataSource.getRepository(Genre);
-export const commentRepo = AppDataSource.getRepository(Comment);
-export const ratingRepo = AppDataSource.getRepository(Rating);
+export default {
+  cart: AppDataSource.getRepository(Cart),
+  users: AppDataSource.getRepository(User),
+  books: AppDataSource.getRepository(Book),
+  genre: AppDataSource.getRepository(Genre),
+  comment: AppDataSource.getRepository(Comment),
+  rating: AppDataSource.getRepository(Rating),
+};

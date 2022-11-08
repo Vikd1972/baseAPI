@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
 import { createHmac } from 'crypto';
 
-import { usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 import config from '../../config';
 import customError from '../../customError/customError';
@@ -30,7 +30,7 @@ const secretWord = config.token.secretWord;
 const authUser: ControllerType = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await usersRepo
+    const user = await db.users
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.favorites', 'favorite')
       .where('user.email = :email', { email })

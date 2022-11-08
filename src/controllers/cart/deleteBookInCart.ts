@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { cartRepo } from '../../db';
+import db from '../../db';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import type Cart from '../../db/entity/Cart';
@@ -25,7 +25,7 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
     const id = req.body.id;
     const userId = req.user?.id;
 
-    const bookInCart = await cartRepo.find({
+    const bookInCart = await db.cart.find({
       where: {
         user: {
           id: userId,
@@ -38,9 +38,9 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, req.body.id);
     }
 
-    await cartRepo.remove(bookInCart);
+    await db.cart.remove(bookInCart);
 
-    const userCart = await cartRepo.find({
+    const userCart = await db.cart.find({
       relations: {
         book: true,
       },

@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Cart from '../../db/entity/Cart';
 
-import { booksRepo, usersRepo, cartRepo } from '../../db';
+import db from '../../db';
 
 type ParamsType = Record<string, never>;
 
@@ -21,7 +21,7 @@ const addBookToCart: ControllerType = async (req, res, next) => {
     const bookId = req.body.bookId;
     const userId = req.user?.id;
 
-    const cart = await cartRepo.find({
+    const cart = await db.cart.find({
       where: {
         book: {
           id: bookId,
@@ -35,7 +35,7 @@ const addBookToCart: ControllerType = async (req, res, next) => {
     if (cart.length === 0) {
       const newCart = new Cart();
 
-      const book = await booksRepo.findOne({
+      const book = await db.books.findOne({
         relations: {
           cart: true,
         },
@@ -44,7 +44,7 @@ const addBookToCart: ControllerType = async (req, res, next) => {
         },
       });
 
-      const user = await usersRepo.findOne({
+      const user = await db.users.findOne({
         relations: {
           cart: true,
         },
@@ -57,10 +57,10 @@ const addBookToCart: ControllerType = async (req, res, next) => {
       if (user) newCart.user = user;
       if (book) newCart.book = book;
 
-      await cartRepo.save(newCart);
+      await db.cart.save(newCart);
     }
 
-    const userCart = await cartRepo.find({
+    const userCart = await db.cart.find({
       relations: {
         book: true,
       },

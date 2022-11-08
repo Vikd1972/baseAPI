@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { createHmac } from 'crypto';
 import * as jwt from 'jsonwebtoken';
 
-import { usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -38,7 +38,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
     const userId = decoded.id as number;
-    const user = await usersRepo
+    const user = await db.users
       .createQueryBuilder('user')
       .where('user.id = :id', { id: userId })
       .addSelect('user.password')
@@ -78,7 +78,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
       }
     }
 
-    await usersRepo.save(user);
+    await db.users.save(user);
 
     delete user.password;
     user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;

@@ -2,7 +2,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo, ratingRepo } from '../../db';
+import db from '../../db';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import type Book from '../../db/entity/Book';
@@ -17,7 +17,6 @@ type RequestType = {
 
 type ResponseType = {
   book: Book;
-  myRating: number;
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
@@ -25,9 +24,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 const getDetailBook: ControllerType = async (req, res, next) => {
   try {
     const bookId = req.body.id;
-    const userId = req.user?.id;
 
-    const book = await booksRepo.findOneBy({
+    const book = await db.books.findOneBy({
       id: bookId,
     });
 
@@ -41,22 +39,8 @@ const getDetailBook: ControllerType = async (req, res, next) => {
       book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
     }
 
-    const rating = await ratingRepo.findOne({
-      where: {
-        user: {
-          id: userId,
-        },
-        book: {
-          id: bookId,
-        },
-      },
-    });
-    const myRating = rating?.rating || 0;
-    // console.log(myRating);
-
     return res.status(StatusCodes.OK).json({
       book,
-      myRating,
     });
   } catch (err) {
     next(err);

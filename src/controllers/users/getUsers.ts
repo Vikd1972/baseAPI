@@ -2,7 +2,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -25,7 +25,7 @@ const getUsers: ControllerType = async (req, res, next) => {
   try {
     if (req.body.id) {
       const id = +req.body.id;
-      const user = await usersRepo.findOneBy({
+      const user = await db.users.findOneBy({
         id,
       });
 
@@ -39,7 +39,7 @@ const getUsers: ControllerType = async (req, res, next) => {
       });
     }
 
-    const users = await usersRepo.find({
+    const users = await db.users.find({
       relations: {
         cart: true,
         comment: true,

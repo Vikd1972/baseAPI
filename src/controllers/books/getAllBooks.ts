@@ -3,7 +3,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { booksRepo, genreRepo, ratingRepo } from '../../db';
+import db from '../../db';
 import type Book from '../../db/entity/Book';
 import type Genre from '../../db/entity/Genre';
 import type Rating from '../../db/entity/Rating';
@@ -62,7 +62,7 @@ const getBooks: ControllerType = async (req, res, next) => {
       maxPrice = +price.split(',')[1] * 100;
     }
 
-    const filteredBooks = booksRepo
+    const filteredBooks = db.books
       .createQueryBuilder('book');
 
     if (currentGenres.length !== 0) {
@@ -145,9 +145,9 @@ const getBooks: ControllerType = async (req, res, next) => {
       booksPerPage: pagination,
     };
 
-    const allGenres = await genreRepo.find();
+    const allGenres = await db.genre.find();
 
-    const rating = await ratingRepo.find();
+    const rating = await db.rating.find();
 
     return res.status(StatusCodes.OK).json({
       books,

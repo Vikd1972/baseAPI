@@ -51,7 +51,6 @@ export class User {
 
   @OneToMany(() => Rating, (Rating) => Rating.user, {
     cascade: true,
-    eager: true,
   })
   @JoinColumn()
   rating: Rating[];

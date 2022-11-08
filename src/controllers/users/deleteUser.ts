@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { usersRepo } from '../../db';
+import db from '../../db';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -24,7 +24,7 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 const deleteUser: ControllerType = async (req, res, next) => {
   try {
     const email = req.body.email;
-    const user = await usersRepo.findOneBy({
+    const user = await db.users.findOneBy({
       email,
     });
 
@@ -32,7 +32,7 @@ const deleteUser: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, req.body.email);
     }
 
-    await usersRepo.remove(user);
+    await db.users.remove(user);
     return res.status(StatusCodes.OK).json({
       message: 'user deleted',
       user,
