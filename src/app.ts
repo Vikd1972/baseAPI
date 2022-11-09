@@ -3,8 +3,8 @@ import cors from 'cors';
 import path from 'path';
 
 import booksRoute from './routes/booksRoute';
-import cartRoute from './routes/cartRoute';
 import favoritesRoute from './routes/favoritesRoute';
+import cartRoute from './routes/cartRoute';
 import usersRoute from './routes/usersRoute';
 import authRoute from './routes/authRoute';
 import ratingRoute from './routes/ratingRoute';

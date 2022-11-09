@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
