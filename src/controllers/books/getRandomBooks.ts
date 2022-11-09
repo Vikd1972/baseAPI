@@ -19,7 +19,7 @@ const getRandomBooks: ControllerType = async (req, res, next) => {
     const quantityBooks = await db.books.count();
 
     const randomBooks: number[] = [];
-    for (let i = 0; i <= 3; i++) {
+    while (randomBooks.length < 4) {
       randomBooks.push(Math.ceil(Math.random() * quantityBooks));
     }
 
