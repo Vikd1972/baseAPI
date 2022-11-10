@@ -104,7 +104,7 @@ const getBooks: ControllerType = async (req, res, next) => {
         filteredBooks.orderBy('book.author', 'ASC');
         break;
       case 'Rating':
-        filteredBooks.orderBy('book.name', 'ASC');
+        filteredBooks.orderBy('book.averageRating', 'DESC');
         break;
       case 'Date of ussue':
         filteredBooks.orderBy('book.releasedAt', 'ASC');

@@ -11,7 +11,7 @@ type ParamsType = Record<string, never>;
 type BodyType = Record<string, never>;
 
 type RequestType = {
-  id: number;
+  cartId: number;
 };
 
 type ResponseType = {
@@ -22,20 +22,17 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const deleteBookInCart: ControllerType = async (req, res, next) => {
   try {
-    const id = req.body.id;
+    const cartId = req.body.cartId;
     const userId = req.user?.id;
 
-    const bookInCart = await db.cart.find({
+    const bookInCart = await db.cart.findOne({
       where: {
-        user: {
-          id: userId,
-        },
-        id,
+        id: cartId,
       },
     });
 
     if (!bookInCart) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, req.body.id);
+      throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, req.body.cartId);
     }
 
     await db.cart.remove(bookInCart);

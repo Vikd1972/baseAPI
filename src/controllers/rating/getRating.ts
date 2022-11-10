@@ -10,6 +10,7 @@ type ParamsType = Record<string, never>;
 
 type RequestType = {
   bookId: number;
+  userId: number;
 };
 
 type ResponseType = {
@@ -20,8 +21,7 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unkn
 
 const getRating: ControllerType = async (req, res, next) => {
   try {
-    const { bookId } = req.body;
-    const userId = req.user?.id;
+    const { bookId, userId } = req.body;
 
     const myRating = await db.rating.findOne({
       where: {

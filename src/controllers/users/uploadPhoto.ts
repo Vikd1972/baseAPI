@@ -54,9 +54,9 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
+
     if (user.photoFilePath) {
-      const file = user.photoFilePath.slice(29);
-      fs.unlink(`${path}/${file}`, ((err) => {
+      fs.unlink(`${path}/${user.photoFilePath}`, ((err) => {
         if (err) console.error(err);
       }));
     }
