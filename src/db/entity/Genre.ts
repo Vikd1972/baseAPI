@@ -12,7 +12,7 @@ export class Genre {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   name: string;
 
   @ManyToMany(() => Book, (book) => book.genres)

@@ -17,13 +17,13 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   fullname: string;
 
-  @Column({ nullable: false, unique: true })
+  @Column({ nullable: false, unique: true, type: 'varchar' })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   photoFilePath: string;
 
   @Column({ type: 'varchar', nullable: true, select: false })

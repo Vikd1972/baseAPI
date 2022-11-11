@@ -3,6 +3,7 @@ import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
+import config from '../../config';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -32,7 +33,7 @@ const getUsers: ControllerType = async (req, res, next) => {
       if (!user) {
         throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
       }
-      user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
+      user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
       return res.status(StatusCodes.OK).format({
         user,

@@ -14,10 +14,10 @@ export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   comment: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'date' })
   commentData: Date;
 
   @ManyToOne(() => Book, (book) => book.comment, {

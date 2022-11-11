@@ -19,37 +19,37 @@ export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false, type: 'varchar' })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false, type: 'varchar' })
   author: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   pathToCover: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
   description: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'date' })
   releasedAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   paperbackPrice: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   paperbackQuantity: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   hardcoverPrice: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   hardcoverQuantity: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'boolean' })
   isNew: boolean;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'boolean' })
   isBestseller: boolean;
 
   @Column({ nullable: true, type: 'real' })
@@ -68,14 +68,12 @@ export class Book {
 
   @OneToMany(() => Comment, (Comment) => Comment.book, {
     cascade: true,
-    eager: true,
   })
   @JoinColumn()
   comment: Comment[];
 
   @OneToMany(() => Cart, (Cart) => Cart.book, {
     cascade: true,
-    eager: true,
   })
   @JoinColumn()
   cart: Cart[];

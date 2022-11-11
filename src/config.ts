@@ -14,6 +14,8 @@ dotenv.config();
 const config = {
   port: +joinedEnv.PORT,
   path: joinedEnv.LOCAL_PATH,
+  pathToImage: joinedEnv.PATH_TO_IMAGE,
+  pathToCover: joinedEnv.PATH_TO_COVER,
   db: {
     port: +joinedEnv.DB_PORT,
     host: joinedEnv.HOST,

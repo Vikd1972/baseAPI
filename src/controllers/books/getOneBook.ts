@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
+import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import type Book from '../../db/entity/Book';
@@ -12,7 +12,7 @@ type ParamsType = Record<string, never>;
 type BodyType = Record<string, never>;
 
 type RequestType = {
-  id: number;
+  bookId: number;
 };
 
 type ResponseType = {
@@ -23,7 +23,7 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const getDetailBook: ControllerType = async (req, res, next) => {
   try {
-    const bookId = req.body.id;
+    const bookId = req.body.bookId;
 
     const book = await db.books.findOneBy({
       id: bookId,
@@ -33,11 +33,9 @@ const getDetailBook: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, bookId);
     }
 
-    if (book) {
-      book.hardcoverPrice /= 100;
-      book.paperbackPrice /= 100;
-      book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
-    }
+    book.hardcoverPrice /= 100;
+    book.paperbackPrice /= 100;
+    book.pathToCover = `${config.pathToCover}${book.pathToCover}`;
 
     return res.status(StatusCodes.OK).json({
       book,

@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
+import config from '../../config';
 import type Book from '../../db/entity/Book';
 
 type ParamsType = Record<string, never>;
@@ -20,20 +21,20 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const getFavoritesBooks: ControllerType = async (req, res, next) => {
   try {
-    const favoritesBooks = req.body.favorites;
+    const favorites = req.body.favorites;
 
-    const books = await db.books
+    const favoritesBook = await db.books
       .createQueryBuilder()
-      .where('id IN (:...ids)', { ids: favoritesBooks })
+      .where('id IN (:...ids)', { ids: favorites })
       .getMany();
 
-    books.forEach((book) => {
-      // eslint-disable-next-line no-param-reassign
-      book.hardcoverPrice /= 100;
-      // eslint-disable-next-line no-param-reassign
-      book.paperbackPrice /= 100;
-      // eslint-disable-next-line no-param-reassign
-      book.pathToCover = `http://localhost:4001/covers/${book.pathToCover}`;
+    const books = favoritesBook.map((book) => {
+      return {
+        ...book,
+        hardcoverPrice: book.hardcoverPrice / 100,
+        paperbackPrice: book.paperbackPrice / 100,
+        pathToCover: `${config.pathToCover}${book.pathToCover}`,
+      };
     });
 
     return res.status(StatusCodes.OK).json({

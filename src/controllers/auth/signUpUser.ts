@@ -53,7 +53,7 @@ const signUpUser: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body);
     }
-    user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
+    user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
     return res.status(StatusCodes.OK).json({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),

@@ -15,7 +15,6 @@ type RequestType = {
 };
 
 type ResponseType = {
-  message: string;
   user: User;
 };
 
@@ -34,7 +33,6 @@ const deleteUser: ControllerType = async (req, res, next) => {
 
     await db.users.remove(user);
     return res.status(StatusCodes.OK).json({
-      message: 'user deleted',
       user,
     });
   } catch (err) {

@@ -12,6 +12,6 @@ cartRoute.use(checkToken);
 cartRoute.post('/add', addBookToCart);
 cartRoute.patch('/change', changeQuantity);
 cartRoute.delete('/', deleteBookInCart);
-cartRoute.post('/', getCart);
+cartRoute.get('/', getCart);
 
 export default cartRoute;

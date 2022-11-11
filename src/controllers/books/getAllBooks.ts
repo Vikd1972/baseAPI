@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/indent */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
+import config from '../../config';
 import type Book from '../../db/entity/Book';
 import type Genre from '../../db/entity/Genre';
 import type Rating from '../../db/entity/Rating';
@@ -22,6 +22,7 @@ type QueryType = {
   price: string;
   sort: string;
   search: string;
+  page: string;
 };
 
 type ServiceInfoType = {
@@ -44,9 +45,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Quer
 
 const getBooks: ControllerType = async (req, res, next) => {
   try {
-    const pagination = req.body.pagination;
-    let currentPage = req.body.currentPage;
-    const { genres, price, sort, search } = req.query;
+    const { genres, price, sort, search, page } = req.query;
+    let currentPage = Number(page) || 1;
     let currentGenres: number[] = [];
     if (genres) {
       currentGenres = genres.split(',').map((item: string | number) => {
@@ -112,10 +112,10 @@ const getBooks: ControllerType = async (req, res, next) => {
       default:
     }
 
-    const skip = (pagination * currentPage) - pagination;
+    const skip = (12 * currentPage) - 12;
 
     const filterBooks = await filteredBooks
-      .take(pagination)
+      .take(12)
       .skip(skip)
       .getManyAndCount();
 
@@ -124,12 +124,12 @@ const getBooks: ControllerType = async (req, res, next) => {
         ...book,
         hardcoverPrice: book.hardcoverPrice / 100,
         paperbackPrice: book.paperbackPrice / 100,
-        pathToCover: `http://localhost:4001/covers/${book.pathToCover}`,
+        pathToCover: `${config.pathToCover}${book.pathToCover}`,
       };
     });
 
     const quantityBooks = filterBooks[1];
-    const quantityPages = Math.ceil(quantityBooks / pagination);
+    const quantityPages = Math.ceil(quantityBooks / 12);
     if (currentPage < 1) {
       currentPage = 1;
     } else if (currentPage > quantityPages) {
@@ -142,7 +142,7 @@ const getBooks: ControllerType = async (req, res, next) => {
       activePage: currentPage,
       prevPage: currentPage === 1 ? 1 : currentPage - 1,
       nextPage: currentPage === quantityPages ? currentPage : currentPage + 1,
-      booksPerPage: pagination,
+      booksPerPage: 12,
     };
 
     const allGenres = await db.genre.find();

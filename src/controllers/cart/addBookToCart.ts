@@ -32,7 +32,7 @@ const addBookToCart: ControllerType = async (req, res, next) => {
       },
     });
 
-    if (cart.length === 0) {
+    if (!cart.length) {
       const newCart = new Cart();
 
       const book = await db.books.findOne({

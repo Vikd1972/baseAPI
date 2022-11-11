@@ -7,7 +7,7 @@ import getRandomBooks from '../controllers/books/getRandomBooks';
 const booksRoute = express.Router();
 
 booksRoute.post('/detail', getDetailBook);
-booksRoute.get('/', getRandomBooks);
-booksRoute.post('/', getBooks);
+booksRoute.get('/random', getRandomBooks);
+booksRoute.get('/', getBooks);
 
 export default booksRoute;

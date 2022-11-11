@@ -44,7 +44,7 @@ const restoreUser: ControllerType = async (req, res, next) => {
     if (!user) {
       throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
-    user.photoFilePath = `http://localhost:4001/uploads/${user.photoFilePath}`;
+    user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
     return res.status(StatusCodes.OK).json({
       user,
     });

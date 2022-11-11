@@ -13,7 +13,7 @@ export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int' })
+  @Column({ nullable: false, type: 'integer' })
   count: number;
 
   @ManyToOne(() => Book, (book) => book.cart, {
