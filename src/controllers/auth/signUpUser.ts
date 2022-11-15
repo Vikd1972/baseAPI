@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { createHmac } from 'crypto';
@@ -30,9 +31,10 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const signUpUser: ControllerType = async (req, res, next) => {
   try {
-    const { fullname, email, password } = req.body;
+    const { email, password } = req.body;
+
     const newUser = new User();
-    newUser.fullname = fullname;
+    newUser.fullname = '';
     newUser.email = email;
     newUser.password = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
 

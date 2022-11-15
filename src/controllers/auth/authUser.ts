@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
@@ -32,7 +33,10 @@ const authUser: ControllerType = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await db.users
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.favorites', 'favorite')
+      .leftJoinAndSelect('user.favorites', 'book')
+      .leftJoinAndSelect('user.cart', 'cart')
+      .leftJoinAndSelect('user.comment', 'comment')
+      .leftJoinAndSelect('user.rating', 'rating')
       .where('user.email = :email', { email })
       .addSelect('user.password')
       .getOne();
@@ -49,6 +53,7 @@ const authUser: ControllerType = async (req, res, next) => {
 
     delete user.password;
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
+
     return res.status(StatusCodes.OK).json({
       user,
       token: jwt.sign({ id: user.id }, secretWord || ''),

@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
-import type User from '../../db/entity/User';
+import type Book from '../../db/entity/Book';
 
 type ParamsType = Record<string, never>;
 
@@ -13,7 +14,7 @@ type RequestType = {
 };
 
 type ResponseType = {
-  newUser: User;
+  myFavorites: Book[];
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
@@ -24,6 +25,9 @@ const addToFavorites: ControllerType = async (req, res, next) => {
     const userId = req.user?.id;
 
     const user = await db.users.findOne({
+      relations: {
+        favorites: true,
+      },
       where: {
         id: userId,
       },
@@ -36,9 +40,9 @@ const addToFavorites: ControllerType = async (req, res, next) => {
     });
 
     if (book && user) {
-      const bookIndex = user.favorites?.findIndex((item) => bookId === item.id);
+      const bookIndex = user.favorites?.findIndex((item) => bookId === item.id) || -1;
 
-      if (bookIndex && bookIndex !== -1) {
+      if (bookIndex !== -1) {
         user.favorites?.splice(bookIndex, 1);
         await db.users.save(user);
       } else {
@@ -47,16 +51,18 @@ const addToFavorites: ControllerType = async (req, res, next) => {
       }
     }
 
-    const newUser = await db.users.findOne({
+    const updateUser = await db.users.findOne({
+      relations: {
+        favorites: true,
+      },
       where: {
         id: userId,
       },
     });
-    if (newUser) {
-      return res.status(StatusCodes.OK).json({
-        newUser,
-      });
-    }
+
+    return res.status(StatusCodes.OK).json({
+      myFavorites: updateUser?.favorites || [],
+    });
   } catch (err) {
     next(err);
   }

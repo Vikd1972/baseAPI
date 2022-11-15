@@ -31,25 +31,23 @@ export class User {
 
   @ManyToMany(() => Book, (book) => book.users, {
     cascade: true,
-    eager: true,
   })
+  @JoinColumn()
   favorites?: Book[];
 
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: true,
-    eager: true,
   })
   @JoinColumn()
   comment: Comment[];
 
-  @OneToMany(() => Cart, (Cart) => Cart.user, {
+  @OneToMany(() => Cart, (cart) => cart.user, {
     cascade: true,
-    eager: true,
   })
   @JoinColumn()
   cart: Cart[];
 
-  @OneToMany(() => Rating, (Rating) => Rating.user, {
+  @OneToMany(() => Rating, (rating) => rating.user, {
     cascade: true,
   })
   @JoinColumn()
