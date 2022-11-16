@@ -11,29 +11,40 @@ type RequestType = {
   bookId: number;
 };
 
+type QueryType = {
+  bookId: string;
+};
+
 type ResponseType = {
   commentsOfBook: Comment[];
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unknown>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType>;
 
 const getComments: ControllerType = async (req, res, next) => {
   try {
-    const { bookId } = req.body;
+    const { bookId } = req.query;
 
-    const commentsOfBook = await db.comments.find({
+    const allCommentsOfBook = await db.comments.find({
       relations: {
         user: true,
       },
       where: {
         book: {
-          id: bookId,
+          id: Number(bookId),
         },
       },
     });
-    if (!commentsOfBook) {
+
+    if (!allCommentsOfBook) {
       return res.status(StatusCodes.OK);
     }
+
+    const commentsOfBook = [...allCommentsOfBook];
+
+    commentsOfBook.sort(
+      (a, b) => (new Date(a.commentData).getTime()) - (new Date(b.commentData).getTime()),
+    );
 
     return res.status(StatusCodes.OK).json({
       commentsOfBook,

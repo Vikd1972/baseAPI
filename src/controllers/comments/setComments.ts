@@ -11,7 +11,7 @@ import db from '../../db';
 type ParamsType = Record<string, never>;
 
 type RequestType = {
-  comments: string;
+  comment: string;
   bookId: number;
 };
 
@@ -23,7 +23,7 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unkn
 
 const setComments: ControllerType = async (req, res, next) => {
   try {
-    const { comments, bookId } = req.body;
+    const { comment, bookId } = req.body;
     const userId = req.user?.id;
 
     const book = await db.books.findOne({
@@ -54,14 +54,14 @@ const setComments: ControllerType = async (req, res, next) => {
 
     const newComment = new Comment();
 
-    newComment.comment = comments;
+    newComment.comment = comment;
     newComment.commentData = new Date();
     newComment.user = user;
     newComment.book = book;
 
     await db.comments.save(newComment);
 
-    const commentsOfBook = await db.comments.find({
+    const allCommentsOfBook = await db.comments.find({
       relations: {
         user: true,
       },
@@ -72,9 +72,15 @@ const setComments: ControllerType = async (req, res, next) => {
       },
     });
 
-    if (!commentsOfBook) {
+    if (!allCommentsOfBook) {
       return res.status(StatusCodes.OK);
     }
+
+    const commentsOfBook = [...allCommentsOfBook];
+
+    commentsOfBook.sort(
+      (a, b) => (new Date(a.commentData).getTime()) - (new Date(b.commentData).getTime()),
+    );
 
     return res.status(StatusCodes.OK).json({
       commentsOfBook,

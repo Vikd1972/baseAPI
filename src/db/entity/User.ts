@@ -30,6 +30,7 @@ export class User {
   password?: string;
 
   @ManyToMany(() => Book, (book) => book.users, {
+    nullable: true,
     cascade: true,
   })
   @JoinColumn()

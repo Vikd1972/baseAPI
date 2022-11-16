@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -13,19 +14,23 @@ type RequestType = {
   favorites: number[];
 };
 
+type QueryType = {
+  favorites: string;
+};
+
 type ResponseType = {
   books: Book[];
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType, BodyType>;
 
 const getFavoritesBooks: ControllerType = async (req, res, next) => {
   try {
-    const favorites = req.body.favorites;
+    const { favorites } = req.query;
 
     const favoritesBook = await db.books
       .createQueryBuilder()
-      .where('id IN (:...ids)', { ids: favorites })
+      .where('id IN (:...ids)', { ids: favorites.split(',') })
       .getMany();
 
     const books = favoritesBook.map((book) => {

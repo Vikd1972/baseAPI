@@ -5,8 +5,9 @@ import getRating from '../controllers/rating/getRating';
 import checkToken from '../middleware/checkToken';
 
 const ratingRoute = express.Router();
+ratingRoute.use(checkToken);
 
-ratingRoute.post('/get', getRating);
-ratingRoute.post('/', checkToken, setRating);
+ratingRoute.get('/', getRating);
+ratingRoute.post('/', setRating);
 
 export default ratingRoute;

@@ -6,7 +6,7 @@ import checkToken from '../middleware/checkToken';
 
 const commentsRoute = express.Router();
 
-commentsRoute.post('/get', getComments);
+commentsRoute.get('/', getComments);
 commentsRoute.post('/', checkToken, setComments);
 
 export default commentsRoute;

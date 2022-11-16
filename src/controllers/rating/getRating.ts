@@ -13,15 +13,23 @@ type RequestType = {
   userId: number;
 };
 
-type ResponseType = {
-  myRating: Rating;
+type QueryType = {
+  bookId: string;
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, unknown>;
+type ResponseType = {
+  myRating: {
+    id: number;
+    rating: number;
+  };
+};
+
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType>;
 
 const getRating: ControllerType = async (req, res, next) => {
   try {
-    const { bookId, userId } = req.body;
+    const userId = req.user?.id;
+    const { bookId } = req.query;
 
     const myRating = await db.rating.findOne({
       where: {
@@ -29,13 +37,18 @@ const getRating: ControllerType = async (req, res, next) => {
           id: userId,
         },
         book: {
-          id: bookId,
+          id: Number(bookId),
         },
       },
     });
 
     if (!myRating) {
-      return res.status(StatusCodes.OK);
+      return res.status(StatusCodes.OK).json({
+        myRating: {
+          id: 0,
+          rating: 0,
+        },
+      });
     }
 
     return res.status(StatusCodes.OK).json({

@@ -38,6 +38,7 @@
     "multer": "^1.4.5-lts.1",
     "node-crypto-js": "^1.0.3",
     "pg": "^8.4.0",
+    "react-router-dom": "^6.4.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "0.3.9",
     "typeorm-extension": "^2.1.14",

@@ -8,6 +8,6 @@ const favoritesRoute = express.Router();
 favoritesRoute.use(checkToken);
 
 favoritesRoute.post('/', addToFavorites);
-favoritesRoute.put('/', getFavoritesBooks);
+favoritesRoute.get('/', getFavoritesBooks);
 
 export default favoritesRoute;

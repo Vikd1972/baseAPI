@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -15,18 +18,22 @@ type RequestType = {
   bookId: number;
 };
 
+type QueryType = {
+  bookId: string;
+};
+
 type ResponseType = {
   book: Book;
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType, BodyType>;
 
 const getDetailBook: ControllerType = async (req, res, next) => {
   try {
-    const bookId = req.body.bookId;
+    const { bookId } = req.query;
 
     const book = await db.books.findOneBy({
-      id: bookId,
+      id: Number(bookId),
     });
 
     if (!book) {
