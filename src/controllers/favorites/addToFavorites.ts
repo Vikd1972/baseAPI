@@ -60,8 +60,6 @@ const addToFavorites: ControllerType = async (req, res, next) => {
       },
     });
 
-    console.log(updateUser?.favorites || []);
-
     return res.status(StatusCodes.OK).json({
       myFavorites: updateUser?.favorites || [],
     });
