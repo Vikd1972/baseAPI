@@ -2,7 +2,6 @@ import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
-import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 import type Cart from '../../db/entity/Cart';
@@ -24,7 +23,6 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 const deleteBookInCart: ControllerType = async (req, res, next) => {
   try {
     const cartId = req.body.cartId;
-    const userId = req.user?.id;
 
     const bookInCart = await db.cart.findOne({
       where: {
@@ -38,30 +36,7 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
 
     await db.cart.remove(bookInCart);
 
-    const userCart = await db.cart.find({
-      relations: {
-        book: true,
-      },
-      where: {
-        user: {
-          id: userId,
-        },
-      },
-    });
-
-    userCart.forEach((purchase) => {
-      return Object.entries(purchase).map((item) => {
-        if (item[0] === 'book') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-param-reassign
-          item[1].pathToCover = `${config.pathToCover}${purchase.book.pathToCover}`;
-        }
-        return item;
-      });
-    });
-
-    return res.status(StatusCodes.OK).json({
-      userCart,
-    });
+    return res.status(StatusCodes.OK).send();
   } catch (err) {
     next(err);
   }
