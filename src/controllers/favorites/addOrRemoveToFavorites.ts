@@ -19,7 +19,7 @@ type ResponseType = {
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
-const addToFavorites: ControllerType = async (req, res, next) => {
+const addOrRemoveToFavorites: ControllerType = async (req, res, next) => {
   try {
     const bookId = req.body.bookId;
     const userId = req.user?.id;
@@ -39,8 +39,8 @@ const addToFavorites: ControllerType = async (req, res, next) => {
       },
     });
 
-    if (book && user) {
-      const bookIndex = user.favorites?.findIndex((item) => bookId === item.id) || -1;
+    if (book && user?.favorites) {
+      const bookIndex = user.favorites.findIndex((item) => bookId === item.id);
 
       if (bookIndex !== -1) {
         user.favorites?.splice(bookIndex, 1);
@@ -51,21 +51,10 @@ const addToFavorites: ControllerType = async (req, res, next) => {
       }
     }
 
-    const updateUser = await db.users.findOne({
-      relations: {
-        favorites: true,
-      },
-      where: {
-        id: userId,
-      },
-    });
-
-    return res.status(StatusCodes.OK).json({
-      myFavorites: updateUser?.favorites || [],
-    });
+    return res.status(StatusCodes.OK).send();
   } catch (err) {
     next(err);
   }
 };
 
-export default addToFavorites;
+export default addOrRemoveToFavorites;

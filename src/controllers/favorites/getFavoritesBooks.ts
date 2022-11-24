@@ -28,6 +28,10 @@ const getFavoritesBooks: ControllerType = async (req, res, next) => {
   try {
     const { favorites } = req.query;
 
+    if (!favorites) {
+      return res.status(StatusCodes.OK).send();
+    }
+
     const favoritesBook = await db.books
       .createQueryBuilder()
       .where('id IN (:...ids)', { ids: favorites.split(',') })
