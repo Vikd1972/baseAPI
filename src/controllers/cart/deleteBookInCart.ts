@@ -36,7 +36,7 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
 
     await db.cart.remove(bookInCart);
 
-    return res.status(StatusCodes.OK).send();
+    return res.sendStatus(StatusCodes.OK);
   } catch (err) {
     next(err);
   }

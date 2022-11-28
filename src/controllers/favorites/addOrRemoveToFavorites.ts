@@ -51,7 +51,7 @@ const addOrRemoveToFavorites: ControllerType = async (req, res, next) => {
       }
     }
 
-    return res.status(StatusCodes.OK).send();
+    return res.sendStatus(StatusCodes.OK);
   } catch (err) {
     next(err);
   }

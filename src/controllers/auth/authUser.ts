@@ -6,6 +6,7 @@ import { createHmac } from 'crypto';
 
 import db from '../../db';
 import type User from '../../db/entity/User';
+import type Cart from '../../db/entity/Cart';
 import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -21,6 +22,7 @@ type RequestType = {
 
 type ResponseType = {
   user: User;
+  userCart: Cart[];
   token: string;
 };
 
@@ -54,8 +56,30 @@ const authUser: ControllerType = async (req, res, next) => {
     delete user.password;
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
+    const userCart = await db.cart.find({
+      relations: {
+        book: true,
+      },
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+    });
+
+    userCart.forEach((purchase) => {
+      return Object.entries(purchase).map((item) => {
+        if (item[0] === 'book') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-param-reassign
+          item[1].pathToCover = `${config.pathToCover}${purchase.book.pathToCover}`;
+        }
+        return item;
+      });
+    });
+
     return res.status(StatusCodes.OK).json({
       user,
+      userCart,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });
   } catch (err) {

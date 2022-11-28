@@ -58,8 +58,8 @@ const getBooks: ControllerType = async (req, res, next) => {
     let minPrice = 0;
     let maxPrice = 10000;
     if (price) {
-      minPrice = +price.split(',')[0] * 100;
-      maxPrice = +price.split(',')[1] * 100;
+      minPrice = +price.split(',')[0];
+      maxPrice = +price.split(',')[1];
     }
 
     const filteredBooks = db.books
@@ -81,14 +81,14 @@ const getBooks: ControllerType = async (req, res, next) => {
 
     if (minPrice > 0) {
       filteredBooks.where(
-        'book.paperbackPrice >= :minPrice OR book.hardcoverPrice >= :minPrice',
+        'book.paperbackPrice >= :minPrice',
         { minPrice },
       );
     }
 
-    if (maxPrice < 10000) {
+    if (maxPrice < 100) {
       filteredBooks.where(
-        'book.paperbackPrice <= :maxPrice OR book.hardcoverPrice <= :maxPrice',
+        'book.paperbackPrice <= :maxPrice',
         { maxPrice },
       );
     }
@@ -122,8 +122,6 @@ const getBooks: ControllerType = async (req, res, next) => {
     const books = filterBooks[0].map((book) => {
       return {
         ...book,
-        hardcoverPrice: book.hardcoverPrice / 100,
-        paperbackPrice: book.paperbackPrice / 100,
         pathToCover: `${config.pathToCover}${book.pathToCover}`,
       };
     });

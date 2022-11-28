@@ -60,7 +60,7 @@ const addBookToCart: ControllerType = async (req, res, next) => {
       await db.cart.save(newCart);
     }
 
-    return res.status(StatusCodes.OK).send();
+    return res.sendStatus(StatusCodes.OK);
   } catch (err) {
     next(err);
   }

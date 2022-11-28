@@ -40,8 +40,6 @@ const getDetailBook: ControllerType = async (req, res, next) => {
       throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, bookId);
     }
 
-    book.hardcoverPrice /= 100;
-    book.paperbackPrice /= 100;
     book.pathToCover = `${config.pathToCover}${book.pathToCover}`;
 
     return res.status(StatusCodes.OK).json({

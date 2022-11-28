@@ -32,8 +32,6 @@ const getRandomBooks: ControllerType = async (req, res, next) => {
     const books = recommendetsBooks.map((book) => {
       return {
         ...book,
-        hardcoverPrice: book.hardcoverPrice / 100,
-        paperbackPrice: book.paperbackPrice / 100,
         pathToCover: `${config.pathToCover}${book.pathToCover}`,
       };
     });

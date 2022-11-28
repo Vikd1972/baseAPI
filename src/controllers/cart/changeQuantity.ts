@@ -32,7 +32,7 @@ const changeQuantity: ControllerType = async (req, res, next) => {
       await db.cart.save(cart);
     }
 
-    return res.status(StatusCodes.OK).send();
+    return res.sendStatus(StatusCodes.OK);
   } catch (err) {
     next(err);
   }

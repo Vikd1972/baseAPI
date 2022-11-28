@@ -43,12 +43,7 @@ const getRating: ControllerType = async (req, res, next) => {
     });
 
     if (!myRating) {
-      return res.status(StatusCodes.OK).json({
-        myRating: {
-          id: 0,
-          rating: 0,
-        },
-      });
+      return res.sendStatus(StatusCodes.OK);
     }
 
     return res.status(StatusCodes.OK).json({

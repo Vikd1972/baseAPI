@@ -34,13 +34,13 @@ export class Book {
   @Column({ nullable: true, type: 'date' })
   releasedAt: Date;
 
-  @Column({ nullable: true, type: 'integer' })
+  @Column({ nullable: true, type: 'real' })
   paperbackPrice: number;
 
   @Column({ nullable: true, type: 'integer' })
   paperbackQuantity: number;
 
-  @Column({ nullable: true, type: 'integer' })
+  @Column({ nullable: true, type: 'real' })
   hardcoverPrice: number;
 
   @Column({ nullable: true, type: 'integer' })

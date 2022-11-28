@@ -61,7 +61,7 @@ const setComments: ControllerType = async (req, res, next) => {
 
     await db.comments.save(newComment);
 
-    return res.status(StatusCodes.OK).send();
+    return res.sendStatus(StatusCodes.OK);
   } catch (err) {
     next(err);
   }
