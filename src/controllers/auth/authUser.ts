@@ -37,8 +37,6 @@ const authUser: ControllerType = async (req, res, next) => {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.favorites', 'book')
       .leftJoinAndSelect('user.cart', 'cart')
-      .leftJoinAndSelect('user.comment', 'comment')
-      .leftJoinAndSelect('user.rating', 'rating')
       .where('user.email = :email', { email })
       .addSelect('user.password')
       .getOne();

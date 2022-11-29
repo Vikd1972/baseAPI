@@ -34,9 +34,7 @@ const restoreUser: ControllerType = async (req, res, next) => {
     const user = await db.users.findOne({
       relations: {
         cart: true,
-        comment: true,
         favorites: true,
-        rating: true,
       },
       where: {
         id: userId,
