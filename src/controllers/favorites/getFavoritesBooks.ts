@@ -14,28 +14,33 @@ type RequestType = {
   favorites: number[];
 };
 
-type QueryType = {
-  favorites: string;
-};
+// type QueryType = {
+//   favorites: string;
+// };
 
 type ResponseType = {
   books: Book[];
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, QueryType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
 
 const getFavoritesBooks: ControllerType = async (req, res, next) => {
   try {
-    const { favorites } = req.query;
+    const userId = req.user?.id;
+    const user = await db.users.findOne({
+      relations: {
+        favorites: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
 
-    if (!favorites) {
-      return res.status(StatusCodes.OK).send();
+    let favoritesBook: Book[] = [];
+
+    if (user?.favorites) {
+      favoritesBook = user.favorites;
     }
-
-    const favoritesBook = await db.books
-      .createQueryBuilder()
-      .where('id IN (:...ids)', { ids: favorites.split(',') })
-      .getMany();
 
     const books = favoritesBook.map((book) => {
       return {

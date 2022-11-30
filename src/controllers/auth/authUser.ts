@@ -7,6 +7,7 @@ import { createHmac } from 'crypto';
 import db from '../../db';
 import type User from '../../db/entity/User';
 import type Cart from '../../db/entity/Cart';
+import type Book from '../../db/entity/Book';
 import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -22,6 +23,7 @@ type RequestType = {
 
 type ResponseType = {
   user: User;
+  favorites: Book[];
   userCart: Cart[];
   token: string;
 };
@@ -54,6 +56,19 @@ const authUser: ControllerType = async (req, res, next) => {
     delete user.password;
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
+    let favoritesBook: Book[] = [];
+
+    if (user?.favorites) {
+      favoritesBook = user.favorites;
+    }
+
+    const favorites = favoritesBook.map((book) => {
+      return {
+        ...book,
+        pathToCover: `${config.pathToCover}${book.pathToCover}`,
+      };
+    });
+
     const userCart = await db.cart.find({
       relations: {
         book: true,
@@ -77,6 +92,7 @@ const authUser: ControllerType = async (req, res, next) => {
 
     return res.status(StatusCodes.OK).json({
       user,
+      favorites,
       userCart,
       token: jwt.sign({ id: user.id }, secretWord || ''),
     });

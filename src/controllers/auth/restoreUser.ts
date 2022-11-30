@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
@@ -5,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import db from '../../db';
 import type User from '../../db/entity/User';
 import type Cart from '../../db/entity/Cart';
+import type Book from '../../db/entity/Book';
 import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
@@ -17,6 +19,7 @@ type BodyType = Record<string, never>;
 
 type ResponseType = {
   user: User;
+  favorites: Book[];
   userCart: Cart[];
 };
 
@@ -46,6 +49,19 @@ const restoreUser: ControllerType = async (req, res, next) => {
     }
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
+    let favoritesBook: Book[] = [];
+
+    if (user?.favorites) {
+      favoritesBook = user.favorites;
+    }
+
+    const favorites = favoritesBook.map((book) => {
+      return {
+        ...book,
+        pathToCover: `${config.pathToCover}${book.pathToCover}`,
+      };
+    });
+
     const userCart = await db.cart.find({
       relations: {
         book: true,
@@ -69,6 +85,7 @@ const restoreUser: ControllerType = async (req, res, next) => {
 
     return res.status(StatusCodes.OK).json({
       user,
+      favorites,
       userCart,
     });
   } catch (err) {
