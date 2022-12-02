@@ -21,6 +21,7 @@ type RequestType = {
 
 type QueryType = {
   bookId: string;
+  userId: string;
 };
 
 type ResponseType = {
@@ -32,7 +33,8 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Quer
 
 const getDetailBook: ControllerType = async (req, res, next) => {
   try {
-    const { bookId } = req.query;
+    const { bookId, userId } = req.query;
+    // const userId = req.user?.id;
 
     const book = await db.books.findOneBy({
       id: Number(bookId),
@@ -43,6 +45,21 @@ const getDetailBook: ControllerType = async (req, res, next) => {
     }
 
     book.pathToCover = `${config.pathToCover}${book.pathToCover}`;
+
+    const myRating = await db.rating.findOne({
+      where: {
+        user: {
+          id: Number(userId),
+        },
+        book: {
+          id: Number(bookId),
+        },
+      },
+    });
+
+    if (myRating) {
+      book.personalRating = myRating.rating;
+    }
 
     const allCommentsOfBook = await db.comments.find({
       relations: {

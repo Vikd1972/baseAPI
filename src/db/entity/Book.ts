@@ -55,6 +55,9 @@ export class Book {
   @Column({ nullable: true, type: 'real' })
   averageRating: number;
 
+  @Column({ nullable: true, type: 'real' })
+  personalRating: number;
+
   @ManyToMany(() => User, (user) => user.favorites, {
     nullable: true,
   })
