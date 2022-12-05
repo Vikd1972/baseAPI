@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
-import { createHmac } from 'crypto';
+import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
 import type User from '../../db/entity/User';
@@ -12,48 +11,42 @@ import config from '../../config';
 import customError from '../../customError/customError';
 import nameError from '../../utils/utils';
 
+const secretWord = config.token.secretWord;
+
 type ParamsType = Record<string, never>;
 
 type BodyType = Record<string, never>;
-
-type RequestType = {
-  email: string;
-  password: string;
-};
 
 type ResponseType = {
   user: User;
   favorites: Book[];
   userCart: Cart[];
-  token: string;
 };
 
-type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
+type ControllerType = RequestHandler<ParamsType, ResponseType, BodyType>;
 
-const secretWord = config.token.secretWord;
-
-const authUser: ControllerType = async (req, res, next) => {
+const getUserData: ControllerType = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const user = await db.users
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.favorites', 'book')
-      .leftJoinAndSelect('user.cart', 'cart')
-      .where('user.email = :email', { email })
-      .addSelect('user.password')
-      .getOne();
+    if (!req.headers.authorization) {
+      throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound);
+    }
+
+    const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
+    const userId = decoded.id as number;
+
+    const user = await db.users.findOne({
+      relations: {
+        cart: true,
+        favorites: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
+      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
     }
-
-    const hash = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
-
-    if (user.password !== hash) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);
-    }
-
-    delete user.password;
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
     let favoritesBook: Book[] = [];
@@ -94,11 +87,10 @@ const authUser: ControllerType = async (req, res, next) => {
       user,
       favorites,
       userCart,
-      token: jwt.sign({ id: user.id }, secretWord || ''),
     });
   } catch (err) {
     next(err);
   }
 };
 
-export default authUser;
+export default getUserData;

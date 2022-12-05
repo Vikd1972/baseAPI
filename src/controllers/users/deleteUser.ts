@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -22,9 +23,12 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 
 const deleteUser: ControllerType = async (req, res, next) => {
   try {
+    const { userId } = req.params;
+    console.log(userId);
+
     const email = req.body.email;
     const user = await db.users.findOneBy({
-      email,
+      id: Number(userId),
     });
 
     if (!user) {

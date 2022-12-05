@@ -17,7 +17,8 @@ type RequestType = {
 };
 
 type ResponseType = {
-  users: User[];
+  users?: User[];
+  user?: User;
 };
 
 type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, BodyType>;
@@ -29,13 +30,14 @@ const getUsers: ControllerType = async (req, res, next) => {
       const user = await db.users.findOneBy({
         id,
       });
+      console.log(user);
 
       if (!user) {
         throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
       }
       user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
-      return res.status(StatusCodes.OK).format({
+      return res.status(StatusCodes.OK).json({
         user,
       });
     }

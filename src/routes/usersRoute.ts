@@ -11,7 +11,7 @@ import querySchemaUser from '../validation/querySchemaUser';
 const userRoute = express.Router();
 userRoute.use(checkToken);
 
-userRoute.delete('/', deleteUser);
+userRoute.delete('/:userId', deleteUser);
 userRoute.patch('/', validate(querySchemaUser), changeDataUser);
 userRoute.post('/', uploadUserPhoto);
 userRoute.get('/', getUsers);
