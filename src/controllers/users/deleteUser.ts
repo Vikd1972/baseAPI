@@ -5,9 +5,13 @@ import { StatusCodes } from 'http-status-codes';
 import db from '../../db';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
-type ParamsType = Record<string, never>;
+type ParamsType = {
+  userId: number;
+};
+
+// RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>
 
 type BodyType = Record<string, never>;
 
@@ -24,18 +28,19 @@ type ControllerType = RequestHandler<ParamsType, ResponseType, RequestType, Body
 const deleteUser: ControllerType = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
 
-    const email = req.body.email;
-    const user = await db.users.findOneBy({
-      id: Number(userId),
+    const user = await db.users.findOne({
+      where: {
+        id: userId,
+      },
     });
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, req.body.email);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, req.body.email);
     }
 
     await db.users.remove(user);
+
     return res.status(StatusCodes.OK).json({
       user,
     });

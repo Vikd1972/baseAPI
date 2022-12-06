@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Cart from '../../db/entity/Cart';
+import Cart from '../../db/entity/ItemInCart';
 
 import db from '../../db';
 

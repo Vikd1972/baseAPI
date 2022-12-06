@@ -16,9 +16,7 @@ export class Rating {
   @Column({ nullable: true, type: 'real' })
   rating: number;
 
-  @ManyToOne(() => Book, (Book) => Book.rating, {
-    nullable: true,
-  })
+  @ManyToOne(() => Book, (Book) => Book.rating, { nullable: true })
   book: Book;
 
   @ManyToOne(() => User, (User) => User.rating, { nullable: true })

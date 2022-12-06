@@ -9,22 +9,18 @@ import Book from './Book';
 import User from './User';
 
 @Entity()
-export class Cart {
+export class ItemInCart {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false, type: 'integer' })
   count: number;
 
-  @ManyToOne(() => Book, (book) => book.cart, {
-    nullable: false,
-  })
+  @ManyToOne(() => Book, (book) => book.cart, { nullable: false })
   book: Book;
 
-  @ManyToOne(() => User, (user) => user.cart, {
-    nullable: false,
-  })
+  @ManyToOne(() => User, (user) => user.cart, { nullable: false })
   user: User;
 }
 
-export default Cart;
+export default ItemInCart;

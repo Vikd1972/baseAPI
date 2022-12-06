@@ -1,16 +1,16 @@
 import express from 'express';
 
-import querySchemaUser from '../validation/querySchemaUser';
-import querySchemaLogin from '../validation/querySchemaLogin';
-import validate from '../middleware/validator';
+import schemaUser from '../validation/schemaUser';
+import schemaLogin from '../validation/schemaLogin';
+import applyValidationScheme from '../middleware/applyValidationScheme';
 import signInUser from '../controllers/auth/signInUser';
 import signUpUser from '../controllers/auth/signUpUser';
 import getUserData from '../controllers/auth/getUserData';
 
 const authRoute = express.Router();
 
-authRoute.post('/signUp', validate(querySchemaUser), signUpUser);
-authRoute.post('/signIn', validate(querySchemaLogin), signInUser);
+authRoute.post('/signUp', applyValidationScheme(schemaUser), signUpUser);
+authRoute.post('/signIn', applyValidationScheme(schemaLogin), signInUser);
 authRoute.get('/me', getUserData);
 
 export default authRoute;

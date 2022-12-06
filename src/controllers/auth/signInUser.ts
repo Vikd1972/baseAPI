@@ -6,11 +6,11 @@ import { createHmac } from 'crypto';
 
 import db from '../../db';
 import type User from '../../db/entity/User';
-import type Cart from '../../db/entity/Cart';
+import type Cart from '../../db/entity/ItemInCart';
 import type Book from '../../db/entity/Book';
 import config from '../../config';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
 type ParamsType = Record<string, never>;
 
@@ -44,13 +44,13 @@ const signInUser: ControllerType = async (req, res, next) => {
       .getOne();
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, email);
     }
 
     const hash = createHmac('sha256', password).update(config.token.salt || '').digest('hex');
 
     if (user.password !== hash) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.fullname);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.passwordIsWrong, user.fullname);
     }
 
     delete user.password;

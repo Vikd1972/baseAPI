@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import db from '../../db';
 import config from '../../config';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 import type Book from '../../db/entity/Book';
 import type Comment from '../../db/entity/Comment';
 
@@ -41,7 +41,7 @@ const getDetailBook: ControllerType = async (req, res, next) => {
     });
 
     if (!book) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, bookId);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.bookNotFound, bookId);
     }
 
     book.pathToCover = `${config.pathToCover}${book.pathToCover}`;

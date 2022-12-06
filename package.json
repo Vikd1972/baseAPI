@@ -8,7 +8,11 @@
     "start": "ts-node  src/server.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "lint": "eslint . -c .eslintrc.js --ext .ts --ignore-path .eslintignore",
-    "lint:fix": "eslint . -c .eslintrc.js --ext .ts --ignore-path .eslintignore --fix"
+    "lint:fix": "eslint . -c .eslintrc.js --ext .ts --ignore-path .eslintignore --fix",
+    "db:sync": "npm run typeorm-cli -- migration:generate -p src/db/migrations/sync",
+    "db:migrate:up": "npm run typeorm-cli -- migration:run",
+    "db:migrate:down": "npm run typeorm-cli -- migration:revert",
+    "typeorm-cli": "ts-node node_modules/typeorm/cli.js --dataSource src/db/dataSource.ts"
   },
   "author": "",
   "license": "ISC",

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -7,7 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import db from '../../db';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 import config from '../../config';
 
 type ParamsType = Record<string, never>;
@@ -35,7 +36,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
     const { fullname, email, oldPassword, newPassword, confirmPassword } = req.body;
 
     if (!req.headers.authorization) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.tokenNotFound, errorMessages.tokenNotFound);
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
     const userId = decoded.id as number;
@@ -48,7 +49,7 @@ const changeDataUser: ControllerType = async (req, res, next) => {
     const hash = createHmac('sha256', oldPassword || '').update(config.token.salt || '').digest('hex');
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, email);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, email);
     } else {
       if (fullname) {
         user.fullname = fullname;
@@ -59,19 +60,19 @@ const changeDataUser: ControllerType = async (req, res, next) => {
       }
 
       if (oldPassword && (user.password !== hash)) {
-        throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.email);
+        throw customError(StatusCodes.UNAUTHORIZED, errorMessages.passwordIsWrong, user.email);
       }
 
       if (oldPassword && (!newPassword || !confirmPassword)) {
-        throw customError(StatusCodes.UNAUTHORIZED, nameError.newPassword, user.email);
+        throw customError(StatusCodes.UNAUTHORIZED, errorMessages.newPassword, user.email);
       }
 
       if (!oldPassword && (newPassword || confirmPassword)) {
-        throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordIsWrong, user.email);
+        throw customError(StatusCodes.UNAUTHORIZED, errorMessages.passwordIsWrong, user.email);
       }
 
       if (oldPassword && newPassword !== confirmPassword) {
-        throw customError(StatusCodes.UNAUTHORIZED, nameError.passwordError, user.email);
+        throw customError(StatusCodes.UNAUTHORIZED, errorMessages.passwordError, user.email);
       }
 
       if (oldPassword && newPassword === confirmPassword) {

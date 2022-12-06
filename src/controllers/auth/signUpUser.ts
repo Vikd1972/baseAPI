@@ -8,7 +8,7 @@ import User from '../../db/entity/User';
 import db from '../../db';
 import config from '../../config';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
 const secretWord = config.token.secretWord;
 
@@ -53,7 +53,7 @@ const signUpUser: ControllerType = async (req, res, next) => {
     });
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.writingError, req.body);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.writingError, req.body);
     }
     user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
     return res.status(StatusCodes.OK).json({

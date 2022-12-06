@@ -11,7 +11,7 @@ import {
 import User from './User';
 import Comment from './Comment';
 import Genre from './Genre';
-import Cart from './Cart';
+import ItemInCart from './ItemInCart';
 import Rating from './Rating';
 
 @Entity()
@@ -58,34 +58,22 @@ export class Book {
   @Column({ nullable: true, type: 'real' })
   personalRating: number;
 
-  @ManyToMany(() => User, (user) => user.favorites, {
-    nullable: true,
-  })
-  @JoinTable()
+  @ManyToMany(() => User, (user) => user.favorites, { nullable: true })
   users: User[];
 
-  @ManyToMany(() => Genre, (genre) => genre.id, {
-    cascade: true,
-    eager: true,
-  })
+  @ManyToMany(() => Genre, (genre) => genre.id, { cascade: true, eager: true })
   @JoinTable()
   genres: Genre[];
 
-  @OneToMany(() => Comment, (Comment) => Comment.book, {
-    cascade: true,
-  })
+  @OneToMany(() => Comment, (Comment) => Comment.book, { cascade: true })
   @JoinColumn()
   comment: Comment[];
 
-  @OneToMany(() => Cart, (Cart) => Cart.book, {
-    cascade: true,
-  })
+  @OneToMany(() => ItemInCart, (ItemInCart) => ItemInCart.book, { cascade: true })
   @JoinColumn()
-  cart: Cart[];
+  cart: ItemInCart[];
 
-  @OneToMany(() => Rating, (Rating) => Rating.book, {
-    cascade: true,
-  })
+  @OneToMany(() => Rating, (Rating) => Rating.book, { cascade: true })
   @JoinColumn()
   rating: Rating[];
 }

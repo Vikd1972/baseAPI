@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
@@ -8,7 +9,7 @@ import db from '../../db';
 import type User from '../../db/entity/User';
 import config from '../../config';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
 type ParamsType = Record<string, never>;
 
@@ -30,7 +31,7 @@ const secretWord = config.token.secretWord;
 const uploadUserPhoto: ControllerType = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.tokenNotFound, nameError.tokenNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.tokenNotFound, errorMessages.tokenNotFound);
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], secretWord || '') as jwt.JwtPayload;
     const userId = decoded.id as number;
@@ -43,7 +44,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
 
     fs.writeFile(`${path}/${fileName}.${fileExtension}`, buffer, (err) => {
       if (err) {
-        throw customError(StatusCodes.BAD_REQUEST, nameError.errorLoading, nameError.errorLoading);
+        throw customError(StatusCodes.BAD_REQUEST, errorMessages.errorLoading, errorMessages.errorLoading);
       }
     });
 
@@ -52,7 +53,7 @@ const uploadUserPhoto: ControllerType = async (req, res, next) => {
     });
 
     if (!user) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, nameError.userNotFound);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, errorMessages.userNotFound);
     }
 
     if (user.photoFilePath) {

@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
-import type Cart from '../../db/entity/Cart';
+import errorMessages from '../../utils/errorMessages';
+import type Cart from '../../db/entity/ItemInCart';
 
 type ParamsType = Record<string, never>;
 
@@ -31,7 +31,7 @@ const deleteBookInCart: ControllerType = async (req, res, next) => {
     });
 
     if (!bookInCart) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.bookNotFound, req.body.cartId);
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.bookNotFound, req.body.cartId);
     }
 
     await db.cart.remove(bookInCart);

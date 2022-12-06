@@ -14,10 +14,6 @@ type RequestType = {
   favorites: number[];
 };
 
-// type QueryType = {
-//   favorites: string;
-// };
-
 type ResponseType = {
   books: Book[];
 };

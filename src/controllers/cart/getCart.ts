@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import db from '../../db';
 import config from '../../config';
-import type Cart from '../../db/entity/Cart';
+import type Cart from '../../db/entity/ItemInCart';
 
 type ParamsType = Record<string, never>;
 

@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import Comment from '../../db/entity/Comment';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 import config from '../../config';
 
 import db from '../../db';
@@ -34,7 +35,7 @@ const setComments: ControllerType = async (req, res, next) => {
     });
 
     if (!book) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.bookNotFound, nameError.bookNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.bookNotFound, errorMessages.bookNotFound);
     }
 
     const user = await db.users.findOne({
@@ -50,7 +51,7 @@ const setComments: ControllerType = async (req, res, next) => {
     });
 
     if (!user) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.userNotFound, nameError.userNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.userNotFound, errorMessages.userNotFound);
     }
 
     const newComment = new Comment();

@@ -20,14 +20,10 @@ export class Comment {
   @Column({ nullable: true, type: 'date' })
   commentData: Date;
 
-  @ManyToOne(() => Book, (book) => book.comment, {
-    nullable: false,
-  })
+  @ManyToOne(() => Book, (book) => book.comment, { nullable: false })
   book: Book;
 
-  @ManyToOne(() => User, (user) => user.comment, {
-    nullable: false,
-  })
+  @ManyToOne(() => User, (user) => user.comment, { nullable: false })
   user: User;
 }
 

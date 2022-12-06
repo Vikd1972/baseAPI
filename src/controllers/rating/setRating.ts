@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import Rating from '../../db/entity/Rating';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
 import db from '../../db';
 
@@ -33,7 +34,7 @@ const setRating: ControllerType = async (req, res, next) => {
     });
 
     if (!book) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.bookNotFound, nameError.bookNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.bookNotFound, errorMessages.bookNotFound);
     }
 
     const user = await db.users.findOne({
@@ -43,7 +44,7 @@ const setRating: ControllerType = async (req, res, next) => {
     });
 
     if (!user) {
-      throw customError(StatusCodes.UNAUTHORIZED, nameError.userNotFound, nameError.userNotFound);
+      throw customError(StatusCodes.UNAUTHORIZED, errorMessages.userNotFound, errorMessages.userNotFound);
     }
 
     const currentRating = await db.rating.findOne({

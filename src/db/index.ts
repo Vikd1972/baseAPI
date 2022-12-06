@@ -2,12 +2,12 @@ import AppDataSource from './data-source';
 import User from './entity/User';
 import Book from './entity/Book';
 import Genre from './entity/Genre';
-import Cart from './entity/Cart';
+import ItemInCart from './entity/ItemInCart';
 import Comment from './entity/Comment';
 import Rating from './entity/Rating';
 
 export default {
-  cart: AppDataSource.getRepository(Cart),
+  cart: AppDataSource.getRepository(ItemInCart),
   users: AppDataSource.getRepository(User),
   books: AppDataSource.getRepository(Book),
   genre: AppDataSource.getRepository(Genre),

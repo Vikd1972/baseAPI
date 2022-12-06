@@ -3,13 +3,14 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinColumn,
+  JoinTable,
   OneToMany,
   Column,
 } from 'typeorm';
 
 import Book from './Book';
 import Comment from './Comment';
-import Cart from './Cart';
+import ItemInCart from './ItemInCart';
 import Rating from './Rating';
 
 @Entity()
@@ -29,28 +30,19 @@ export class User {
   @Column({ type: 'varchar', nullable: true, select: false })
   password?: string;
 
-  @ManyToMany(() => Book, (book) => book.users, {
-    nullable: true,
-    cascade: true,
-  })
-  @JoinColumn()
+  @ManyToMany(() => Book, (book) => book.users, { nullable: true, cascade: true })
+  @JoinTable()
   favorites?: Book[];
 
-  @OneToMany(() => Comment, (comment) => comment.user, {
-    cascade: true,
-  })
+  @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
   @JoinColumn()
   comment: Comment[];
 
-  @OneToMany(() => Cart, (cart) => cart.user, {
-    cascade: true,
-  })
+  @OneToMany(() => ItemInCart, (ItemInCart) => ItemInCart.user, { cascade: true })
   @JoinColumn()
-  cart: Cart[];
+  cart: ItemInCart[];
 
-  @OneToMany(() => Rating, (rating) => rating.user, {
-    cascade: true,
-  })
+  @OneToMany(() => Rating, (rating) => rating.user, { cascade: true })
   @JoinColumn()
   rating: Rating[];
 }

@@ -6,7 +6,7 @@ import db from '../../db';
 import config from '../../config';
 import type User from '../../db/entity/User';
 import customError from '../../customError/customError';
-import nameError from '../../utils/utils';
+import errorMessages from '../../utils/errorMessages';
 
 type ParamsType = Record<string, never>;
 
@@ -30,10 +30,9 @@ const getUsers: ControllerType = async (req, res, next) => {
       const user = await db.users.findOneBy({
         id,
       });
-      console.log(user);
 
       if (!user) {
-        throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, `id: ${id}`);
+        throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, `id: ${id}`);
       }
       user.photoFilePath = `${config.pathToImage}${user.photoFilePath}`;
 
@@ -42,16 +41,9 @@ const getUsers: ControllerType = async (req, res, next) => {
       });
     }
 
-    const users = await db.users.find({
-      relations: {
-        cart: true,
-        comment: true,
-        favorites: true,
-        rating: true,
-      },
-    });
+    const users = await db.users.find();
     if (users.length === 0) {
-      throw customError(StatusCodes.NOT_FOUND, nameError.userNotFound, 'no users in the database');
+      throw customError(StatusCodes.NOT_FOUND, errorMessages.userNotFound, 'no users in the database');
     }
     return res.status(StatusCodes.OK).json({
       users,
