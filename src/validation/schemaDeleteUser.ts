@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 
 const schemaDeleteUser = {
-  params: {
-    userId: yup.number(),
+  query: {
+    userId: yup.string().required(),
   },
 };
 

@@ -1,9 +1,5 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { Handler } from 'express';
 import * as yup from 'yup';
@@ -20,6 +16,7 @@ const applyValidationScheme = (schema: SchemaType): Handler => async (req, res, 
     const paramsType = Object.keys(schema);
     const queryFields = Object.keys(req.query);
     const bodyFields = Object.keys(req.body);
+    const paramsFields = Object.keys(req.params);
 
     const listOfFields = Object.values(schema).map((item) => {
       return Object.keys(item);
@@ -34,8 +31,8 @@ const applyValidationScheme = (schema: SchemaType): Handler => async (req, res, 
             extraFields.push(item);
           }
         });
-        if (bodyFields.length) {
-          extraQuery = 'Request.body';
+        if (bodyFields.length || paramsFields.length) {
+          extraQuery = 'Request.body or Request.params';
         }
         break;
       case 'body':
@@ -44,8 +41,8 @@ const applyValidationScheme = (schema: SchemaType): Handler => async (req, res, 
             extraFields.push(item);
           }
         });
-        if (queryFields.length) {
-          extraQuery = 'Request.query';
+        if (queryFields.length || paramsFields.length) {
+          extraQuery = 'Request.query or Request.params';
         }
         break;
       default:
